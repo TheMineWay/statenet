@@ -8,10 +8,6 @@
     <PackageId>StateNet</PackageId>
     <Title>$(AssemblyName)</Title>
     <Version>1.0.0-alpha.1</Version>
-    <PackageProjectUrl>https://github.com/TheMineWay/statenet</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/TheMineWay/statenet</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>state;machine;</PackageTags>
   </PropertyGroup>
 
 </Project>
