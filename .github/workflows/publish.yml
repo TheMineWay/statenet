@@ -30,7 +30,7 @@ jobs:
         run: dotnet build ./StateNet/StateNet.csproj --configuration Release --no-restore
 
       - name: 🗒️ Run tests
-        run: dotnet test ./StateNet.Tests/StateNet.Tests.csproj --no-build --verbosity normal
+        run: dotnet test ./StateNet.Tests/StateNet.Tests.csproj --verbosity normal
 
       - name: 📦 Pack
         run: dotnet pack --configuration Release --no-build -o ./StateNet/output
