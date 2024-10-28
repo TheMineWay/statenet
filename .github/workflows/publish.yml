@@ -21,10 +21,10 @@ jobs:
           dotnet-version: '8.x' # Set your .NET version here
 
       - name: 🔄️ Restore dependencies
-        run: dotnet restore .\StateNet\StateNet.csproj
+        run: dotnet restore ./StateNet/StateNet.csproj
 
       - name: 🔄️ Restore test dependencies
-        run: dotnet restore .\StateNet.Tests\StateNet.Tests.csproj
+        run: dotnet restore ./StateNet.Tests/StateNet.Tests.csproj
 
       - name: 🔨 Build
         run: dotnet build ./StateNet/StateNet.csproj --configuration Release --no-restore
