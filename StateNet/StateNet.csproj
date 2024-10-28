@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageId>StateNet</PackageId>
+    <PackageId>TheMineWay.StateNet</PackageId>
     <Title>$(AssemblyName)</Title>
     <Version>1.0.0-alpha.1</Version>
     <PackageProjectUrl>https://github.com/TheMineWay/statenet</PackageProjectUrl>
