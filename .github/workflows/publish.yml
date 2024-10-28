@@ -17,11 +17,11 @@ jobs:
         fetch-depth: 0 #fetch-depth is needed for GitVersion
         
     #Install and calculate the new version with GitVersion  
-    - name: Install GitVersion
+    - name: 🛠️ Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.7
       with:
         versionSpec: 5.x
-    - name: Determine Version
+    - name: 🔀 Determine Version
       uses: gittools/actions/gitversion/execute@v0.9.7
       id: gitversion # step id used as reference for output values
     - name: Display GitVersion outputs
@@ -30,11 +30,13 @@ jobs:
         echo "CommitsSinceVersionSource: ${{ steps.gitversion.outputs.CommitsSinceVersionSource }}"
     
     #Build/pack the project
-    - name: Setup .NET
+    - name: 🔨 Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 8.x
-    - name: Build and Pack NuGet package
+    - name: 📦 Build NuGet package
+      run: dotnet build StateNet/StateNet.csproj -p:Version='${{ steps.gitversion.outputs.SemVer }}' -c Release
+    - name: 📦 Build NuGet package
       run: dotnet pack StateNet/StateNet.csproj -p:Version='${{ steps.gitversion.outputs.SemVer }}' -c Release
     - name: Upload NuGet package to GitHub
       uses: actions/upload-artifact@v3
@@ -49,7 +51,7 @@ jobs:
     
     steps:  
     #Push NuGet package to GitHub packages
-    - name: Download nuget package artifact
+    - name: ⬇️ Download nuget package artifact
       uses: actions/download-artifact@v1.0.0
       with:
         name: nugetPackage
@@ -60,7 +62,7 @@ jobs:
       run: dotnet nuget push nugetPackage/*.nupkg --api-key ${{ secrets.NUGET_PACKAGE_TOKEN }}  --source "github"
     
     #Create release
-    - name: Create Release
+    - name: 🌐 Create Release
       if: 1 == 0 #needs.build.outputs.CommitsSinceVersionSource > 0 #Only release if there has been a commit/version change
       uses: actions/create-release@v1
       env:
@@ -68,7 +70,7 @@ jobs:
       with:
         tag_name: ${{ needs.build.outputs.Version }}
         release_name: Release ${{ needs.build.outputs.Version }}
-    - name: Create Release
+    - name: 🌐 Create Release
       if: needs.build.outputs.CommitsSinceVersionSource > 0 #Only release if there has been a commit/version change
       uses: ncipollo/release-action@v1
       with:
