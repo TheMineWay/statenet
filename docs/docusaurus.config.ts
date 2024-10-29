@@ -53,7 +53,7 @@ const config: Config = {
     navbar: {
       title: "StateNet",
       logo: {
-        alt: "StateNet",
+        alt: "StateNet logo",
         src: "logo.png",
       },
       items: [
