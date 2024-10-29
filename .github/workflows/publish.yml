@@ -35,5 +35,5 @@ jobs:
 
       - name: 🌐 Publish to NuGet
         env:
-          NUGET_API_KEY: ${{ secrets.NUGET_PACKAGE_TOKEN }} # Set your NuGet API key in GitHub secrets
+          NUGET_PACKAGE_TOKEN: ${{ secrets.NUGET_PACKAGE_TOKEN }} # Set your NuGet API key in GitHub secrets
         run: dotnet nuget push ./output/*.nupkg --api-key $NUGET_PACKAGE_TOKEN --source https://api.nuget.org/v3/index.json
