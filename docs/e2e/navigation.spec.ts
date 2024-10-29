@@ -21,4 +21,17 @@ test.describe("Navigate from", () => {
       await expect(page.locator('h1:has-text("Get started")')).toBeVisible();
     });
   });
+
+  test.describe("blog to", () => {
+    test.beforeEach(async ({ page }) => await page.goto(BASE_URL + "/blog"));
+
+    test("the home", async ({ page }) => {
+      const homeBtn = page.locator('.navbar__title:has-text("StateNet")');
+      await homeBtn.click();
+
+      await page.waitForLoadState("load");
+
+      expect(page.url()).toEqual(BASE_URL + "/");
+    });
+  });
 });
