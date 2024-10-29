@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { BASE_URL, PROD_BASE_URL } from "../src/constants/base-url.constant";
 import { parseStringPromise } from "xml2js";
+import { AxeBuilder } from "@axe-core/playwright";
 
 function getHost(url: string): string {
   const parsedUrl = new URL(url);
@@ -43,5 +44,21 @@ test("Proper page title", async ({ page }) => {
     await page.goto(route);
 
     expect(await page.title()).toContain("StateNet");
+  }
+});
+
+test("A11y", async ({ page }) => {
+  for (const route of await getRoutes()) {
+    await page.goto(route);
+
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .exclude("a")
+      .analyze();
+
+    expect(
+      accessibilityScanResults.violations.filter(
+        ({ impact }) => impact === "critical" || impact === "serious"
+      )
+    ).toEqual([]);
   }
 });
