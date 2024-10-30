@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-# Introduction
+# State machine
 
-Let's discover **StateNet** and its capabilities in less than 5 minutes 🚀.
+Let's discover what a state machine is and why they are so useful 🚀.
 
 ## What is a state machine?
 
