@@ -2,13 +2,7 @@
 title: Hello world from StateNet 🚀!
 description: Today we are introducing the first Alpha release of StateNet.
 slug: hello-world-statenet
-authors:
-  - name: Joel Campos
-    title: Creator of StateNet
-    url: https://github.com/TheMineWay
-    image_url: https://github.com/TheMineWay.png
-    socials:
-      linkedin: https://www.linkedin.com/in/joelcamposoliva/
+authors: themineway
 tags: [hello world, alpha]
 hide_table_of_contents: false
 ---
