@@ -22,6 +22,13 @@ var machineBlueprint = StateMachine<string, string>.Factory((mb) => {
 });
 ```
 
+Notice that the `Factory<S, A>` Method accepts two generic types.
+
+- S: defines the states type.
+- A: defined the actions type.
+
+In the following examples both types will be set to `string`, but you can use whatever type you like (it is recommended to use enum values).
+
 ### Adding states
 
 Inside the `Factory` method, use `mb.AddState` to define each state in your state machine. For instance:
