@@ -15,10 +15,10 @@ test.describe("Navigate from", () => {
 
     test("the tutorial", async ({ page }) => {
       // Click on the Tutorial link
-      await page.click("text=Tutorial");
+      await page.click("text=Docs");
 
       // Confirm that the title is visible
-      await expect(page.locator('h1:has-text("Get started")')).toBeVisible();
+      await expect(page.locator('h1:has-text("Introduction")')).toBeVisible();
     });
   });
 

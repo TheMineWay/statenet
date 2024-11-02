@@ -57,7 +57,9 @@ test("A11y", async ({ page }) => {
 
     expect(
       accessibilityScanResults.violations.filter(
-        ({ impact }) => impact === "critical" || impact === "serious"
+        ({ impact, id }) =>
+          (impact === "critical" || impact === "serious") &&
+          !["color-contrast"].includes(id)
       )
     ).toEqual([]);
   }

@@ -32,6 +32,9 @@ const Content = () => {
           >
             Docs
           </a>
+          <a className="button button--outline button--secondary" href="blog">
+            Blog
+          </a>
           <a
             className="button button--outline button--secondary"
             href={pk.repository.url}
