@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 2
 ---
 
 # Instantiating machines
@@ -15,7 +15,7 @@ var machineBlueprint = StateMachine<string, string>.Factory((mb) => {
 });
 
 // Instantiate the machine
-var machine = machineBlueprint();
+var machine = machineBlueprint("INITIAL-STATE");
 ```
 
 Once you have a machine instance you are ready to start working with states.

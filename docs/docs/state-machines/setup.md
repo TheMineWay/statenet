@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 1
 ---
 
 # Setting up a State Machine
@@ -45,7 +45,7 @@ var machineBlueprint = StateMachine<string, string>.Factory((mb) => {
 
 Transitions determine the paths between states. They consist of a origin state, the action that should be triggered to initiate transition, and the target state.
 
-Example using chained methods:
+Example:
 
 ```csharp
 var machineBlueprint = StateMachine<string, string>.Factory((mb) => {
