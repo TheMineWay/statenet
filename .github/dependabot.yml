@@ -5,11 +5,15 @@
 
 version: 2
 updates:
-  - package-ecosystem: "nuget" # See documentation for possible values
-    directory: "/StateNet" # Location of package manifests
+  - package-ecosystem: "nuget"
+    directory: "/StateNet"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "nuget" # See documentation for possible values
-    directory: "/StateNet.Tests" # Location of package manifests
+  - package-ecosystem: "nuget"
+    directory: "/StateNet.Tests"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/docs"
     schedule:
       interval: "weekly"

@@ -1,0 +1,42 @@
+name: Check Documentation Build
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop # Adjust the branches as necessary
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Node.js environment
+      - name: 💚 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      # Install dependencies
+      - name: 📦 Install dependencies
+        run: |
+          cd docs
+          npm ci
+
+      # Build the documentation
+      - name: 🔨 Build documentation
+        run: |
+          cd docs
+          npm run build
+
+      # If the build fails, the workflow will stop here
+      - name: ⏫ Upload artifacts on failure (Optional)
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-logs
+          path: docs/.docusaurus
