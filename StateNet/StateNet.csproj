@@ -12,6 +12,11 @@
     <RepositoryUrl>https://github.com/TheMineWay/statenet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>state;machine;</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath=""/>
+  </ItemGroup>
 
 </Project>
