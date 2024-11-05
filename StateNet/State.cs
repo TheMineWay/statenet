@@ -1,11 +1,11 @@
 ﻿namespace StateNet
 {
-    public class State<S, T> where S : notnull where T : notnull
+    public class State<S, T, C> where S : notnull where T : notnull where C : notnull
     {
         public delegate void OnStateEvent(T fromAction);
 
-        public readonly Dictionary<T, Transition<S>> transitions = [];
-        internal State(Dictionary<T, Transition<S>>? transitions = null, OnStateEvent? onEnter = null, OnStateEvent? onExit = null) {
+        public readonly Dictionary<T, Transition<S, T, C>> transitions = [];
+        internal State(Dictionary<T, Transition<S, T, C>>? transitions = null, OnStateEvent? onEnter = null, OnStateEvent? onExit = null) {
             if (transitions != null) this.transitions = transitions;
 
             // Register default events
@@ -25,14 +25,14 @@
 
         #region API
 
-        public State<S, T> AddTransition(T action, S targetStateName) => AddTransition(action, new Transition<S>(targetStateName));
-        public State<S, T> AddTransition(T action, Transition<S> transition)
+        public State<S, T, C> AddTransition(T action, S targetStateName) => AddTransition(action, new Transition<S, T, C>(targetStateName));
+        public State<S, T, C> AddTransition(T action, Transition<S, T, C> transition)
         {
             transitions[action] = transition;
             return this;
         }
 
-        public State<S, T> RemoveTransition(T action)
+        public State<S, T, C> RemoveTransition(T action)
         {
             transitions.Remove(action);
             return this;
@@ -40,13 +40,13 @@
 
         // State API
 
-        public State<S, T> OnEnter(OnStateEvent onEnter)
+        public State<S, T, C> OnEnter(OnStateEvent onEnter)
         {
             this.onEnter += onEnter;
             return this;
         }
 
-        public State<S, T> OnExit(OnStateEvent onExit)
+        public State<S, T, C> OnExit(OnStateEvent onExit)
         {
             this.onExit += onExit;
             return this;

@@ -1,7 +1,9 @@
-﻿namespace StateNet {
-    public class Transition<S> where S : notnull
+﻿using StateNet.info;
+
+namespace StateNet {
+    public class Transition<S, A, C> where S : notnull where A : notnull where C : notnull
     {
-        public delegate void OnTransitionEvent(S fromState, S toState);
+        public delegate void OnTransitionEvent(TransitionInfo<S, A, C> transitionInfo);
 
         public readonly S targetState;
 
@@ -15,15 +17,15 @@
         #region Events
 
         private OnTransitionEvent? onTransition;
-        internal void InvokeOnTransition(S fromState) => onTransition?.Invoke(fromState, targetState);
+        internal void InvokeOnTransition(S fromState, A via, StateMachine<S, A, C> machine) => onTransition?.Invoke(new() { FromState = fromState, ToState = targetState, Via = via, Machine = machine});
 
         #endregion
 
         #region API
 
-        public void Transitate(S fromState)
+        internal void Transitate(S oldState, A action, StateMachine<S, A, C> machine)
         {
-            InvokeOnTransition(fromState);
+            InvokeOnTransition(fromState: oldState, via: action, machine: machine);
         }
 
         #endregion

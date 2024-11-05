@@ -24,14 +24,15 @@
             // Check if machine reached a end state
             if (!states.ContainsKey(CurrentState)) return;
             var oldState = states[CurrentState];
+            var oldStateName = CurrentState;
 
             // Check if the triggered action can trigger a transition
             if (!oldState.transitions.ContainsKey(action)) return;
             var transition = oldState.transitions[action];
 
-            // Trigger transition
-            transition.Transitate(CurrentState);
-            CurrentState = transition.targetState; // CHange current state
+            // Trigger transition with context info (action and machine)
+            CurrentState = transition.targetState; // Change current state
+            transition.Transitate(oldStateName, action, this);
 
             // Invoke state events
             oldState.InvokeOnExit(action);
@@ -47,7 +48,7 @@
         #region Info
 
         public S CurrentState { get; protected set; }
-        readonly protected Dictionary<S, State<S,T>> states = [];
+        readonly protected Dictionary<S, State<S,T,C>> states = [];
 
         public C Context { get; protected set; }
 
