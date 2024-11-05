@@ -1,15 +1,16 @@
 ﻿namespace StateNet
 {
-    public class StateMachine<S, T> where S : notnull where T : notnull
+    public class StateMachine<S, T, C> where S : notnull where T : notnull where C : notnull
     {
         #region Factory
-        internal StateMachine(S initialState) {
-            currentState = initialState;
+        internal StateMachine(S initialState, C initialContext) {
+            CurrentState = initialState;
+            Context = initialContext;
         }
 
-        public static Func<S, StateMachine<S, T>> Factory(Action<MutableStateMachine<S, T>> builder) => (S initialState) =>
+        public static Func<S, C, StateMachine<S, T, C>> Factory(Action<MutableStateMachine<S, T, C>> builder) => (S initialState, C initialContext) =>
         {
-            var machine = new MutableStateMachine<S, T>(initialState);
+            var machine = new MutableStateMachine<S, T, C>(initialState, initialContext);
             builder(machine);
             return machine;
         };
@@ -21,20 +22,20 @@
         public void Trigger(T action)
         {
             // Check if machine reached a end state
-            if (!states.ContainsKey(currentState)) return;
-            var oldState = states[currentState];
+            if (!states.ContainsKey(CurrentState)) return;
+            var oldState = states[CurrentState];
 
             // Check if the triggered action can trigger a transition
             if (!oldState.transitions.ContainsKey(action)) return;
             var transition = oldState.transitions[action];
 
             // Trigger transition
-            transition.Transitate(currentState);
-            currentState = transition.targetState; // CHange current state
+            transition.Transitate(CurrentState);
+            CurrentState = transition.targetState; // CHange current state
 
             // Invoke state events
             oldState.InvokeOnExit(action);
-            states[currentState].InvokeOnEnter(action);
+            states[CurrentState].InvokeOnEnter(action);
         }
 
         // Info API
@@ -45,8 +46,10 @@
 
         #region Info
 
-        public S currentState { get; protected set; }
+        public S CurrentState { get; protected set; }
         readonly protected Dictionary<S, State<S,T>> states = [];
+
+        public C Context { get; protected set; }
 
         #endregion
     }

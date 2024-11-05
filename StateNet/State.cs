@@ -40,9 +40,15 @@
 
         // State API
 
-        public State<S, T> OnState(OnStateEvent onState)
+        public State<S, T> OnEnter(OnStateEvent onEnter)
         {
-            this.onEnter += onState;
+            this.onEnter += onEnter;
+            return this;
+        }
+
+        public State<S, T> OnExit(OnStateEvent onExit)
+        {
+            this.onExit += onExit;
             return this;
         }
 
