@@ -1,8 +1,10 @@
-﻿namespace StateNet
+﻿using StateNet.info;
+
+namespace StateNet
 {
     public class State<S, T, C> where S : notnull where T : notnull where C : notnull
     {
-        public delegate void OnStateEvent(T fromAction);
+        public delegate void OnStateEvent(TransitionInfo<S,T,C> transitionInfo);
 
         public readonly Dictionary<T, Transition<S, T, C>> transitions = [];
         internal State(Dictionary<T, Transition<S, T, C>>? transitions = null, OnStateEvent? onEnter = null, OnStateEvent? onExit = null) {
@@ -16,10 +18,10 @@
         #region Events
 
         private OnStateEvent? onEnter;
-        internal void InvokeOnEnter(T fromAction) => onEnter?.Invoke(fromAction);
+        internal void InvokeOnEnter(TransitionInfo<S, T, C> transitionInfo) => onEnter?.Invoke(transitionInfo);
 
         private OnStateEvent? onExit;
-        internal void InvokeOnExit(T fromAction) => onExit?.Invoke(fromAction);
+        internal void InvokeOnExit(TransitionInfo<S, T, C> transitionInfo) => onExit?.Invoke(transitionInfo);
 
         #endregion
 

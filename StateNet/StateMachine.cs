@@ -1,4 +1,6 @@
-﻿namespace StateNet
+﻿using StateNet.info;
+
+namespace StateNet
 {
     public class StateMachine<S, T, C> where S : notnull where T : notnull where C : notnull
     {
@@ -30,13 +32,27 @@
             if (!oldState.transitions.ContainsKey(action)) return;
             var transition = oldState.transitions[action];
 
-            // Trigger transition with context info (action and machine)
             CurrentState = transition.targetState; // Change current state
-            transition.Transitate(oldStateName, action, this);
+
+            // Get transition info
+            TransitionInfo<S, T, C> transitionInfo = new() { FromState = oldStateName, ToState = transition.targetState, Via = action, Machine = this };
+
+            // Trigger transition with context info (action and machine)
+            transition.Transitate(transitionInfo);
 
             // Invoke state events
-            oldState.InvokeOnExit(action);
-            states[CurrentState].InvokeOnEnter(action);
+            oldState.InvokeOnExit(transitionInfo);
+            states[CurrentState].InvokeOnEnter(transitionInfo);
+        }
+
+        public void SetContext(C context) {
+            Context = context;
+        }
+
+        public C MutateContext(Func<C, C> mutateFn)
+        {
+            SetContext(mutateFn(Context));
+            return Context;
         }
 
         // Info API

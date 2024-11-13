@@ -17,15 +17,15 @@ namespace StateNet {
         #region Events
 
         private OnTransitionEvent? onTransition;
-        internal void InvokeOnTransition(S fromState, A via, StateMachine<S, A, C> machine) => onTransition?.Invoke(new() { FromState = fromState, ToState = targetState, Via = via, Machine = machine});
+        private void InvokeOnTransition(TransitionInfo<S,A,C> transitionInfo) => onTransition?.Invoke(transitionInfo);
 
         #endregion
 
         #region API
 
-        internal void Transitate(S oldState, A action, StateMachine<S, A, C> machine)
+        internal void Transitate(TransitionInfo<S, A, C> transitionInfo)
         {
-            InvokeOnTransition(fromState: oldState, via: action, machine: machine);
+            InvokeOnTransition(transitionInfo);
         }
 
         #endregion
