@@ -8,10 +8,15 @@
     <PackageId>TheMineWay.StateNet</PackageId>
     <Title>$(AssemblyName)</Title>
     <Version>1.0.0-alpha.2</Version>
-    <PackageProjectUrl>https://github.com/TheMineWay/statenet</PackageProjectUrl>
+    <PackageProjectUrl>https://themineway.github.io/statenet/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/TheMineWay/statenet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>state;machine;</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath=""/>
+  </ItemGroup>
 
 </Project>
