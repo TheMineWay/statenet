@@ -9,13 +9,13 @@ Once you have your machine blueprint ([learn how to initializate it](./setup.md)
 Instantiating a blueprint is as easy as calling the blueprint as a method, just as the following example:
 
 ```csharp
-var machineBlueprint = StateMachine<string, string>.Factory((mb) => {
+var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
     // States definition
     // ...
 });
 
 // Instantiate the machine
-var machine = machineBlueprint("INITIAL-STATE");
+var machine = machineBlueprint("INITIAL-STATE", "INITIAL CONTEXT");
 ```
 
 Once you have a machine instance you are ready to start working with states.

@@ -20,8 +20,8 @@ enum Actions {
     STOP
 }
 
-// In this example states are string values, and actions are Actions (from the enum defined above)
-var machineBlueprint = StateMachine<string, Actions>.Factory((eb) => {
+// In this example states are string values, actions are Actions (from the enum defined above) and the context is an integer (int) value
+var machineBlueprint = StateMachine<string, Actions, int>.Factory((eb) => {
     // States
     var idleState = eb.AddState("IDLE");
     var runningState = eb.AddState("RUNNING");

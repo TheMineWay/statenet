@@ -17,7 +17,7 @@ To start building a state machine, use the `Factory` method provided by the `Sta
 Example:
 
 ```csharp
-var machineBlueprint = StateMachine<string, string>.Factory((mb) => {
+var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
     // Define states here
 });
 ```
@@ -34,7 +34,7 @@ In the following examples both types will be set to `string`, but you can use wh
 Inside the `Factory` method, use `mb.AddState` to define each state in your state machine. For instance:
 
 ```csharp
-var machineBlueprint = StateMachine<string, string>.Factory((mb) => {
+var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
     // IDLE and RUNNING will be the state identifiers
     var idleState = mb.AddState("IDLE");
     var runningState = mb.AddState("RUNNING");
@@ -48,7 +48,7 @@ Transitions determine the paths between states. They consist of a origin state, 
 Example:
 
 ```csharp
-var machineBlueprint = StateMachine<string, string>.Factory((mb) => {
+var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
     var idleState = mb.AddState("IDLE");
     var runningState = mb.AddState("RUNNING");
 
@@ -65,7 +65,7 @@ Events in `StateNet` allow you to perform actions whenever the state machine ent
 Example:
 
 ```csharp
-var machineBlueprint = StateMachine<string, string>.Factory((mb) => {
+var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
     var idleState = mb.AddState("IDLE");
     var runningState = mb.AddState("RUNNING");
 
@@ -73,13 +73,13 @@ var machineBlueprint = StateMachine<string, string>.Factory((mb) => {
     runningState.AddTransition("stop", "IDLE");
 
     // On enter IDLE state
-    idleState.OnState((action) => {
-        Console.WriteLine($"Entered IDLE state from {action}");
+    idleState.OnState((info) => {
+        Console.WriteLine($"Entered IDLE state from {info.FromState}");
     });
 
     // On enter RUNNING state
-    runningState.OnState((action) => {
-        Console.WriteLine($"Entered RUNNING state from {action}")
+    runningState.OnState((info) => {
+        Console.WriteLine($"Entered RUNNING state from {info.FromState}")
     });
 });
 ```

@@ -1,11 +1,11 @@
 ﻿
 namespace StateNet.Tests.FullCases
 {
-    internal class TrafficLightsCase : AMachineTester<TrafficLightsState, TrafficLightsAction>
+    internal class TrafficLightsCase : AMachineTester<TrafficLightsState, TrafficLightsAction, TrafficLightsContext>
     {
-        protected override Func<TrafficLightsState, StateMachine<TrafficLightsState, TrafficLightsAction>> GetMachineBlueprint()
+        protected override Func<TrafficLightsState, TrafficLightsContext, StateMachine<TrafficLightsState, TrafficLightsAction, TrafficLightsContext>> GetMachineBlueprint()
         {
-            return StateMachine<TrafficLightsState, TrafficLightsAction>.Factory((mb) => {
+            return StateMachine<TrafficLightsState, TrafficLightsAction, TrafficLightsContext>.Factory((mb) => {
                 var redState = mb.AddState(TrafficLightsState.RED);
                 var yellowState = mb.AddState(TrafficLightsState.YELLOW);
                 var greenState = mb.AddState(TrafficLightsState.GREEN);
@@ -18,17 +18,17 @@ namespace StateNet.Tests.FullCases
 
         public override void TestTransitions()
         {
-            var machine = GetMachineBlueprint()(TrafficLightsState.RED);
-            Assert.Equal(TrafficLightsState.RED, machine.currentState);
+            var machine = GetMachineBlueprint()(TrafficLightsState.RED, GetInitialContext());
+            Assert.Equal(TrafficLightsState.RED, machine.CurrentState);
 
             machine.Trigger(TrafficLightsAction.CHANGE);
-            Assert.Equal(TrafficLightsState.GREEN, machine.currentState);
+            Assert.Equal(TrafficLightsState.GREEN, machine.CurrentState);
 
             machine.Trigger(TrafficLightsAction.CHANGE);
-            Assert.Equal(TrafficLightsState.YELLOW, machine.currentState);
+            Assert.Equal(TrafficLightsState.YELLOW, machine.CurrentState);
 
             machine.Trigger(TrafficLightsAction.CHANGE);
-            Assert.Equal(TrafficLightsState.RED, machine.currentState);
+            Assert.Equal(TrafficLightsState.RED, machine.CurrentState);
         }
 
         public override void TestEvents()
@@ -38,6 +38,7 @@ namespace StateNet.Tests.FullCases
 
         protected override TrafficLightsState[] GetStates() => [TrafficLightsState.RED, TrafficLightsState.YELLOW, TrafficLightsState.GREEN];
         protected override TrafficLightsState GetInitialState() => TrafficLightsState.RED;
+        protected override TrafficLightsContext GetInitialContext() => new() { timesChanged = 0 };
     }
 
     internal enum TrafficLightsState
@@ -50,5 +51,14 @@ namespace StateNet.Tests.FullCases
     internal enum TrafficLightsAction
     {
         CHANGE
+    }
+
+    internal struct TrafficLightsContext
+    {
+        public int timesChanged = 0;
+
+        public TrafficLightsContext()
+        {
+        }
     }
 }
