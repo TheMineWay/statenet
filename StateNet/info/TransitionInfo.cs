@@ -1,4 +1,4 @@
-﻿namespace StateNet.info
+﻿namespace StateNet.Info
 {
     public struct TransitionInfo<S, A, C> where S : notnull where A : notnull where C : notnull
     {

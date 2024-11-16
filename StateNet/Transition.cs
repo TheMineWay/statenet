@@ -1,4 +1,4 @@
-﻿using StateNet.info;
+﻿using StateNet.Info;
 
 namespace StateNet {
     public class Transition<S, A, C> where S : notnull where A : notnull where C : notnull
