@@ -20,6 +20,8 @@ enum Actions {
     STOP
 }
 
+string initialState = "IDLE";
+
 // In this example states are string values, actions are Actions (from the enum defined above) and the context is an integer (int) value
 var machineBlueprint = StateMachine<string, Actions, int>.Factory((eb) => {
     // States
@@ -29,7 +31,7 @@ var machineBlueprint = StateMachine<string, Actions, int>.Factory((eb) => {
     // Transitions
     idleState.AddTransition(Actions.START, "RUNNING");
     runningState.AddTransition(Actions.STOP, "IDLE");
-});
+}, initialState);
 ```
 
 This diagram represents the states flow defined in the past example:
@@ -52,8 +54,8 @@ If you want to trigger an action you can do so by using the `Trigger` method fro
 Example:
 
 ```csharp
-// We start on IDLE
-var machine = machineBlueprint("IDLE");
+// We instantiate the machine
+var machine = machineBlueprint();
 
 // We transition to START via Actions.STOP action
 machine.Trigger(Actions.START);
