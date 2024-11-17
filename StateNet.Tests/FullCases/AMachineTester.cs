@@ -1,6 +1,6 @@
 ﻿namespace StateNet.Tests.FullCases
 {
-    public abstract class AMachineTester<S, T, C> : IMachineTester where T : notnull where S : notnull
+    public abstract class AMachineTester<S, T, C> : IMachineTester where S : IComparable where T : IComparable
     {
         public void TestStates()
         {

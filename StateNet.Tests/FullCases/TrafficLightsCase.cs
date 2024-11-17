@@ -13,7 +13,7 @@ namespace StateNet.Tests.FullCases
                 redState.AddTransition(TrafficLightsAction.CHANGE, TrafficLightsState.GREEN);
                 yellowState.AddTransition(TrafficLightsAction.CHANGE, TrafficLightsState.RED);
                 greenState.AddTransition(TrafficLightsAction.CHANGE, TrafficLightsState.YELLOW);
-            }, GetInitialState());
+            }, GetInitialState(), GetInitialContext());
         }
 
         public override void TestTransitions()

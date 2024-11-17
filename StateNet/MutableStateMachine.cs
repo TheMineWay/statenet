@@ -1,11 +1,11 @@
 ﻿namespace StateNet
 {
-    public class MutableStateMachine<S, T, C> : StateMachine<S, T, C> where S : notnull where T : notnull
+    public class MutableStateMachine<S, T, C> : StateMachine<S, T, C> where S : IComparable where T : IComparable
     {
         #region Factory
-        internal MutableStateMachine(S initialState, C initialContext) : base(initialState, initialContext) {}
+        internal MutableStateMachine(S initialState, C? initialContext) : base(initialState, initialContext) {}
 
-        public static new Func<S, C, MutableStateMachine<S,T, C>> Factory(Action<MutableStateMachine<S, T, C>> builder) => (S initialState, C initialContext) =>
+        public static new Func<MutableStateMachine<S, T, C>> Factory(Action<MutableStateMachine<S, T, C>> builder, S initialState, C? initialContext = default) => () =>
         {
             var machine = new MutableStateMachine<S, T, C>(initialState, initialContext);
             builder(machine);
