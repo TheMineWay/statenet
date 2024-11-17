@@ -22,7 +22,7 @@
                     var machine = info.Machine;
                     machine.MutateContext((context) => context + 1);
                 });
-            })("day", initialContext);
+            }, "day")();
 
             Assert.Equal(0, machine.Context);
             machine.Trigger(ACTION);

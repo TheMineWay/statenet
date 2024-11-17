@@ -1,6 +1,6 @@
 ﻿namespace StateNet
 {
-    public class MutableStateMachine<S, T, C> : StateMachine<S, T, C> where S : notnull where T : notnull where C : notnull
+    public class MutableStateMachine<S, T, C> : StateMachine<S, T, C> where S : notnull where T : notnull
     {
         #region Factory
         internal MutableStateMachine(S initialState, C initialContext) : base(initialState, initialContext) {}

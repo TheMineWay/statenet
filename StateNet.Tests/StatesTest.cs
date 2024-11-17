@@ -12,9 +12,9 @@ namespace StateNet.Tests
                 {
                     builder.AddState(state);
                 }
-            });
+            }, states[0]);
 
-            var machine = machineBlueprint(states[0], "context");
+            var machine = machineBlueprint();
 
             Assert.Equal(machine.GetStates(), states);
         }
@@ -30,9 +30,9 @@ namespace StateNet.Tests
                     var transitatesTo = states[(i + 1) >= states.Length ? 0 : i];
                     builder.AddState(states[i], new() { {"transitate", new(transitatesTo)} });
                 }
-            });
+            }, states[0]);
 
-            var machine = machineBlueprint(states[0], "context");
+            var machine = machineBlueprint();
 
             Assert.Equal(machine.GetStates(), states);
         }

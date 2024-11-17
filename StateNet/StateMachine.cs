@@ -2,7 +2,7 @@
 
 namespace StateNet
 {
-    public class StateMachine<S, T, C> where S : notnull where T : notnull where C : notnull
+    public class StateMachine<S, T, C> where S : notnull where T : notnull
     {
         #region Factory
         internal StateMachine(S initialState, C initialContext) {
@@ -10,9 +10,12 @@ namespace StateNet
             Context = initialContext;
         }
 
-        public static Func<S, C, StateMachine<S, T, C>> Factory(Action<MutableStateMachine<S, T, C>> builder) => (S initialState, C initialContext) =>
+        public static Func<StateMachine<S, T, C>> Factory(Action<MutableStateMachine<S, T, C>> builder, S entryState) => () =>
         {
-            var machine = new MutableStateMachine<S, T, C>(initialState, initialContext);
+            C context = default;
+            var state = entryState;
+
+            var machine = new MutableStateMachine<S, T, C>(state, context);
             builder(machine);
             return machine;
         };
