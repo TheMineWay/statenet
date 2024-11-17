@@ -49,6 +49,11 @@ namespace StateNet
             Context = context;
         }
 
+        public void SetState(S state)
+        {
+            CurrentState = state;
+        }
+
         public C MutateContext(Func<C, C> mutateFn)
         {
             SetContext(mutateFn(Context));
@@ -64,7 +69,7 @@ namespace StateNet
         #region Info
 
         public S CurrentState { get; protected set; }
-        readonly protected Dictionary<S, State<S,T,C>> states = [];
+        readonly protected Dictionary<S, State<S, T, C>> states = [];
 
         public C? Context { get; protected set; }
 
