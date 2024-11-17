@@ -17,9 +17,11 @@ To start building a state machine, use the `Factory` method provided by the `Sta
 Example:
 
 ```csharp
+string initialState = "..."; // <- We will define this later
+
 var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
     // Define states here
-});
+}, initialState);
 ```
 
 Notice that the `Factory<S, A, C>` Method accepts two generic types.
@@ -35,11 +37,13 @@ In the following examples both types will be set to `string`, but you can use wh
 Inside the `Factory` method, use `mb.AddState` to define each state in your state machine. For instance:
 
 ```csharp
+string initialState = "IDLE"; // Initial state must be a defined state (see below)
+
 var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
     // IDLE and RUNNING will be the state identifiers
     var idleState = mb.AddState("IDLE");
     var runningState = mb.AddState("RUNNING");
-});
+}, initialState);
 ```
 
 ## 2. Creating Transitions
@@ -49,6 +53,8 @@ Transitions determine the paths between states. They consist of a origin state, 
 Example:
 
 ```csharp
+string initialState = "IDLE";
+
 var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
     var idleState = mb.AddState("IDLE");
     var runningState = mb.AddState("RUNNING");
@@ -56,7 +62,7 @@ var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
     // The first parameter represents the action that triggers a change to the state from a defined state
     idleState.AddTransition("start", "RUNNING"); // When "start" is triggered while the machine is on "IDLE" state it will transition to "RUNNING"
     runningState.AddTransition("stop", "IDLE");
-});
+}, initialState);
 ```
 
 ## 3. Setting Up Events
@@ -66,6 +72,8 @@ Events in `StateNet` allow you to perform actions whenever the state machine ent
 Example:
 
 ```csharp
+string initialState = "IDLE";
+
 var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
     var idleState = mb.AddState("IDLE");
     var runningState = mb.AddState("RUNNING");
@@ -82,7 +90,7 @@ var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
     runningState.OnState((info) => {
         Console.WriteLine($"Entered RUNNING state from {info.FromState}")
     });
-});
+}, initialState);
 ```
 
 In this example, the `OnState` method defines an action that will be triggered each time the machine enters a specified state.

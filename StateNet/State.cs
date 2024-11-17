@@ -1,8 +1,8 @@
-﻿using StateNet.info;
+﻿using StateNet.Info;
 
 namespace StateNet
 {
-    public class State<S, T, C> where S : notnull where T : notnull where C : notnull
+    public class State<S, T, C> where S : IComparable where T : IComparable
     {
         public delegate void OnStateEvent(TransitionInfo<S,T,C> transitionInfo);
 

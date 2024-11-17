@@ -16,6 +16,7 @@ A state machine library provides a structured way to manage an object's state an
 
 ```mermaid
 stateDiagram-v2
+    [*] --> Signed_out
     Signed_out --> Authenticating: Submit credentials
     Authenticating --> Authenticated: Login success
     Authenticating --> Login_failed: Login error

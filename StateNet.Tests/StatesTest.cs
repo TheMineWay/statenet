@@ -10,11 +10,13 @@ namespace StateNet.Tests
             {
                 foreach (var state in states)
                 {
-                    builder.AddState(state);
-                }
-            });
+                    var s = builder.AddState(state);
 
-            var machine = machineBlueprint(states[0], "context");
+                    TestNoEventsAreCalled(s);
+                }
+            }, states[0]);
+
+            var machine = machineBlueprint();
 
             Assert.Equal(machine.GetStates(), states);
         }
@@ -28,13 +30,27 @@ namespace StateNet.Tests
                 for (short i = 0; i < states.Length; i++)
                 {
                     var transitatesTo = states[(i + 1) >= states.Length ? 0 : i];
-                    builder.AddState(states[i], new() { {"transitate", new(transitatesTo)} });
-                }
-            });
+                    var s = builder.AddState(states[i], new() { {"transitate", new(transitatesTo)} });
 
-            var machine = machineBlueprint(states[0], "context");
+                    TestNoEventsAreCalled(s);
+                }
+            }, states[0]);
+
+            var machine = machineBlueprint();
 
             Assert.Equal(machine.GetStates(), states);
         }
+
+        #region Utils
+
+        static void TestNoEventsAreCalled<S, A, C>(State<S, A, C> state) where S : IComparable where A : IComparable
+        {
+            // Test no state event is triggered as this test only checks states list.
+            // It should never call any state event as no trigger fn is called.
+            state.OnEnter((info) => throw new Exception("OnEnter state event has been called"));
+            state.OnExit((info) => throw new Exception("OnExit state event has been called"));
+        }
+
+        #endregion
     }
 }

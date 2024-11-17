@@ -11,28 +11,25 @@ Each machine allows you to mutate a value when events happen. For example, you c
 The context datatype is defined as the third generic type of the machine. In the following example we will use an `int` value:
 
 ```csharp
+string initialState = "...";
+
 var machineBlueprint = StateMachine<string, string, int>.Factory((builder) =>
 {
     /* ... */
-});
+}, initialState);
 ```
 
-You can define the initial context value by using the `SetContext` method available on the `builder`.
+You can define the initial context value by providing another argument after the `initialState`.
 
 ```csharp
+string initialState = "...";
+int initialContext = 0;
+
 var machineBlueprint = StateMachine<string, string, int>.Factory((builder) =>
 {
-    builder.SetContext(1);
-
     /* ... */
-});
+}, initialState, initialContext);
 ```
-
-:::warning Be careful
-
-If you set the default context value using the `Factory` (as the example above does) you need to do it before defining events.
-
-:::
 
 ## Mutating the context
 
@@ -44,6 +41,9 @@ You might want to mutate the context value when some events happen. You can do s
 Lets see how:
 
 ```csharp
+string initialState = "day";
+int initialContext = 0;
+
 var machine = StateMachine<string, string, int>.Factory((builder) =>
 {
     /* Define day state & transition to night */
@@ -59,7 +59,7 @@ var machine = StateMachine<string, string, int>.Factory((builder) =>
         var machine = info.Machine;
         machine.MutateContext((context) => context + 1);
     });
-});
+}, initialState, initialContext);
 ```
 
 This example shows us a state machine that switchs between _day_ and _night_ and counts how many days have passed.

@@ -1,6 +1,6 @@
-﻿namespace StateNet.info
+﻿namespace StateNet.Info
 {
-    public struct TransitionInfo<S, A, C> where S : notnull where A : notnull where C : notnull
+    public struct TransitionInfo<S, A, C> where S : IComparable where A : IComparable
     {
         public S FromState { get; internal set; }
         public S ToState { get; internal set; }

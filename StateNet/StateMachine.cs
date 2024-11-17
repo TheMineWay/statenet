@@ -1,16 +1,16 @@
-﻿using StateNet.info;
+﻿using StateNet.Info;
 
 namespace StateNet
 {
-    public class StateMachine<S, T, C> where S : notnull where T : notnull where C : notnull
+    public class StateMachine<S, T, C> where S : IComparable where T : IComparable
     {
         #region Factory
-        internal StateMachine(S initialState, C initialContext) {
+        internal StateMachine(S initialState, C? initialContext) {
             CurrentState = initialState;
             Context = initialContext;
         }
 
-        public static Func<S, C, StateMachine<S, T, C>> Factory(Action<MutableStateMachine<S, T, C>> builder) => (S initialState, C initialContext) =>
+        public static Func<StateMachine<S, T, C>> Factory(Action<MutableStateMachine<S, T, C>> builder, S initialState, C? initialContext = default) => () =>
         {
             var machine = new MutableStateMachine<S, T, C>(initialState, initialContext);
             builder(machine);
@@ -49,6 +49,11 @@ namespace StateNet
             Context = context;
         }
 
+        public void SetState(S state)
+        {
+            CurrentState = state;
+        }
+
         public C MutateContext(Func<C, C> mutateFn)
         {
             SetContext(mutateFn(Context));
@@ -64,9 +69,9 @@ namespace StateNet
         #region Info
 
         public S CurrentState { get; protected set; }
-        readonly protected Dictionary<S, State<S,T,C>> states = [];
+        readonly protected Dictionary<S, State<S, T, C>> states = [];
 
-        public C Context { get; protected set; }
+        public C? Context { get; protected set; }
 
         #endregion
     }

@@ -3,7 +3,7 @@ namespace StateNet.Tests.FullCases
 {
     internal class TrafficLightsCase : AMachineTester<TrafficLightsState, TrafficLightsAction, TrafficLightsContext>
     {
-        protected override Func<TrafficLightsState, TrafficLightsContext, StateMachine<TrafficLightsState, TrafficLightsAction, TrafficLightsContext>> GetMachineBlueprint()
+        protected override Func<StateMachine<TrafficLightsState, TrafficLightsAction, TrafficLightsContext>> GetMachineBlueprint()
         {
             return StateMachine<TrafficLightsState, TrafficLightsAction, TrafficLightsContext>.Factory((mb) => {
                 var redState = mb.AddState(TrafficLightsState.RED);
@@ -13,12 +13,14 @@ namespace StateNet.Tests.FullCases
                 redState.AddTransition(TrafficLightsAction.CHANGE, TrafficLightsState.GREEN);
                 yellowState.AddTransition(TrafficLightsAction.CHANGE, TrafficLightsState.RED);
                 greenState.AddTransition(TrafficLightsAction.CHANGE, TrafficLightsState.YELLOW);
-            });
+            }, GetInitialState(), GetInitialContext());
         }
 
         public override void TestTransitions()
         {
-            var machine = GetMachineBlueprint()(TrafficLightsState.RED, GetInitialContext());
+            var machine = GetMachineBlueprint()();
+
+            machine.SetContext(GetInitialContext());
             Assert.Equal(TrafficLightsState.RED, machine.CurrentState);
 
             machine.Trigger(TrafficLightsAction.CHANGE);
