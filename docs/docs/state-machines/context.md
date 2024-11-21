@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # Working with the context
@@ -43,6 +43,7 @@ Lets see how:
 ```csharp
 string initialState = "day";
 int initialContext = 0;
+string ACTION = "next";
 
 var machine = StateMachine<string, string, int>.Factory((builder) =>
 {
