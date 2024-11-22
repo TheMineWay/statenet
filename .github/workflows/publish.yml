@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,24 +16,21 @@ jobs:
       - name: 🛠️ Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.x' # Set your .NET version here
+          dotnet-version: "9.x" # Use the latest version to ensure compatibility
 
-      - name: 🔄️ Restore dependencies
+      - name: 🔄 Restore dependencies
         run: dotnet restore ./StateNet/StateNet.csproj
-
-      - name: 🔄️ Restore test dependencies
-        run: dotnet restore ./StateNet.Tests/StateNet.Tests.csproj
 
       - name: 🔨 Build
         run: dotnet build ./StateNet/StateNet.csproj --configuration Release --no-restore
 
       - name: 🗒️ Run tests
-        run: dotnet test ./StateNet.Tests/StateNet.Tests.csproj --verbosity normal
+        run: dotnet test ./StateNet.Tests/StateNet.Tests.csproj --configuration Release --no-build --verbosity normal
 
       - name: 📦 Pack
         run: dotnet pack ./StateNet/StateNet.csproj --configuration Release --no-build -o ./output
 
       - name: 🌐 Publish to NuGet
         env:
-          NUGET_PACKAGE_TOKEN: ${{ secrets.NUGET_PACKAGE_TOKEN }} # Set your NuGet API key in GitHub secrets
+          NUGET_PACKAGE_TOKEN: ${{ secrets.NUGET_PACKAGE_TOKEN }} # NuGet API key in GitHub secrets
         run: dotnet nuget push ./output/*.nupkg --api-key $NUGET_PACKAGE_TOKEN --source https://api.nuget.org/v3/index.json
