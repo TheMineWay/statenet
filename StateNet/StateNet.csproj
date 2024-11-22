@@ -1,21 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <!-- Specify multiple target frameworks -->
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+
+    <!-- Explicitly set the C# language version -->
+    <LangVersion>latest</LangVersion>
+    
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    
+    <!-- Enable NuGet package generation -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>TheMineWay.StateNet</PackageId>
     <Title>$(AssemblyName)</Title>
-    <Version>1.0.0-alpha.3</Version>
+    <Version>1.0.0-alpha.4</Version>
     <PackageProjectUrl>https://themineway.github.io/statenet/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/TheMineWay/statenet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>state;machine;</PackageTags>
+    <PackageTags>state;machine</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Include package icon -->
     <None Include="icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
