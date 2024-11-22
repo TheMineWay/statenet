@@ -3,6 +3,9 @@
   <PropertyGroup>
     <!-- Specify multiple target frameworks -->
     <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+
+    <!-- Explicitly set the C# language version -->
+    <LangVersion>latest</LangVersion>
     
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
