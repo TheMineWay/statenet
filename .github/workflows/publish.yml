@@ -25,7 +25,7 @@ jobs:
         run: dotnet build ./StateNet/StateNet.csproj --configuration Release --no-restore
 
       - name: 🗒️ Run tests
-        run: dotnet test ./StateNet.Tests/StateNet.Tests.csproj --configuration Release --no-build --verbosity normal
+        run: dotnet test ./StateNet.Tests/StateNet.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=TestResults.trx"
 
       - name: 📦 Pack
         run: dotnet pack ./StateNet/StateNet.csproj --configuration Release --no-build -o ./output
