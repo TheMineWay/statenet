@@ -16,7 +16,7 @@ jobs:
       - name: 🛠️ Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: "9.x" # Use the latest version to ensure compatibility
+          dotnet-version: "8.x" # Use the latest version to ensure compatibility
 
       - name: 🔄 Restore dependencies
         run: dotnet restore ./StateNet/StateNet.csproj
