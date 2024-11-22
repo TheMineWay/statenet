@@ -31,10 +31,10 @@ jobs:
         run: dotnet build ./StateNet/StateNet.sln --configuration Release --no-restore
 
       - name: ⏩ Run unit tests with report
-        run: dotnet test ./StateNet.Tests/StateNet.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=TestResults${{ matrix.dotnet-version }}.trx"
+        run: dotnet test ./StateNet.Tests/StateNet.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=TestResults-${{ matrix.dotnet-version }}.trx"
 
       - name: ⏫ Upload test results
         uses: actions/upload-artifact@v4
         with:
-          name: TestResults
-          path: ./StateNet.Tests/TestResults/TestResults${{ matrix.dotnet-version }}.trx
+          name: TestResults-${{ matrix.dotnet-version }}
+          path: ./StateNet.Tests/TestResults/TestResults-${{ matrix.dotnet-version }}.trx
