@@ -36,6 +36,54 @@
         }
 
         [Fact]
+        public void ConditionDependantTransitions()
+        {
+            // This tests that the machine is able to count how many days have passed by mutating its context each day
+            // This time, count stops at day 10
+
+            const string ACTION = "action";
+
+            var machine = StateMachine<string, string, int>.Factory((mb) =>
+            {
+                var a = mb.AddState("A");
+                var b = mb.AddState("B");
+                var c = mb.AddState("C");
+
+                // Same state with two transitions with same action
+                a.AddTransition(ACTION, "B");
+                a.AddTransition(ACTION, "C").When((info) => info.Machine.Context == 0);
+
+                // Back to A
+                c.AddTransition(ACTION, "A");
+                b.AddTransition(ACTION, "A");
+
+                // Events
+                a.OnExit((info) =>
+                {
+                    info.Machine.MutateContext((c) => c == 0 ? 1 : 0);
+                });
+            }, "A", 0)();
+
+            Assert.Equal(0, machine.Context);
+            machine.Trigger(ACTION);
+            Assert.Equal("C", machine.CurrentState);
+            machine.Trigger(ACTION);
+            Assert.Equal("A", machine.CurrentState);
+
+            // Now it should go througth state B
+            machine.Trigger(ACTION);
+            Assert.Equal("B", machine.CurrentState);
+            machine.Trigger(ACTION);
+            Assert.Equal("A", machine.CurrentState);
+
+            // Now, again via state C
+            machine.Trigger(ACTION);
+            Assert.Equal("C", machine.CurrentState);
+            machine.Trigger(ACTION);
+            Assert.Equal("A", machine.CurrentState);
+        }
+
+        [Fact]
         public void ConditionalStates() {
             const string ACTION = "switch";
             const string GREEN = "GREEN", YELLOW = "YELLOW", RED = "RED";
