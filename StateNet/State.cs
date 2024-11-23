@@ -6,8 +6,8 @@ namespace StateNet
     {
         public delegate void OnStateEvent(TransitionInfo<S,T,C> transitionInfo);
 
-        public readonly Dictionary<T, Transition<S, T, C>> transitions = [];
-        internal State(Dictionary<T, Transition<S, T, C>>? transitions = null, OnStateEvent? onEnter = null, OnStateEvent? onExit = null) {
+        public readonly Dictionary<T, List<Transition<S, T, C>>> transitions = [];
+        internal State(Dictionary<T, List<Transition<S, T, C>>>? transitions = null, OnStateEvent? onEnter = null, OnStateEvent? onExit = null) {
             if (transitions != null) this.transitions = transitions;
 
             // Register default events
@@ -30,14 +30,27 @@ namespace StateNet
         public State<S, T, C> AddTransition(T action, S targetStateName) => AddTransition(action, new Transition<S, T, C>(targetStateName));
         public State<S, T, C> AddTransition(T action, Transition<S, T, C> transition)
         {
-            transitions[action] = transition;
+            if (!transitions.ContainsKey(action)) transitions[action] = [];
+            transitions[action].Add(transition);
             return this;
         }
 
-        public State<S, T, C> RemoveTransition(T action)
+        public State<S, T, C> RemoveTransitions(T action)
         {
             transitions.Remove(action);
             return this;
+        }
+
+        internal List<Transition<S, T, C>> GetSortedActionTransitionsList(T action) => [.. transitions[action].OrderByDescending(item => item.IsConditional())];
+
+        internal Transition<S, T, C>? GetTransitionByAction(T action)
+        {
+            foreach (var transition in GetSortedActionTransitionsList(action))
+            {
+                if (!transition.IsConditional()) return transition;
+            }
+
+            return null;
         }
 
         // State API

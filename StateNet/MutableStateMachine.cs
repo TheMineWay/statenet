@@ -15,7 +15,7 @@
         #endregion
 
         #region API.Build
-        public State<S, T, C> AddState(S stateName, Dictionary<T, Transition<S, T, C>>? transitions = null)
+        public State<S, T, C> AddState(S stateName, Dictionary<T, List<Transition<S, T, C>>>? transitions = null)
         {
             var state = new State<S, T, C>(transitions);
             states[stateName] = state;

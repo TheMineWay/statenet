@@ -7,7 +7,7 @@ namespace StateNet {
 
         public readonly S targetState;
 
-        public Transition(S targetState, OnTransitionEvent? onTransition = null) {
+        public Transition( S targetState, OnTransitionEvent? onTransition = null) {
             this.targetState = targetState;
 
             // Register default events
@@ -27,6 +27,8 @@ namespace StateNet {
         {
             InvokeOnTransition(transitionInfo);
         }
+
+        public bool IsConditional() => false;
 
         #endregion
     }

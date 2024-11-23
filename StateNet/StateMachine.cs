@@ -30,7 +30,10 @@ namespace StateNet
 
             // Check if the triggered action can trigger a transition
             if (!oldState.transitions.ContainsKey(action)) return;
-            var transition = oldState.transitions[action];
+
+            // Get the first valid transition
+            var transition = oldState.GetTransitionByAction(action);
+            if (transition == null) return; // If none is valid, abort
 
             CurrentState = transition.targetState; // Change current state
 
