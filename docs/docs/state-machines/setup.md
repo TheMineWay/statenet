@@ -24,7 +24,7 @@ var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
 }, initialState);
 ```
 
-Notice that the `Factory<S, A, C>` Method accepts two generic types.
+Notice that the `Factory<S, A, C>` Method accepts three generic types.
 
 - S: defines the states type.
 - A: defines the actions type.

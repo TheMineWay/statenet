@@ -6,8 +6,8 @@ namespace StateNet
     {
         public delegate void OnStateEvent(TransitionInfo<S,T,C> transitionInfo);
 
-        public readonly Dictionary<T, Transition<S, T, C>> transitions = [];
-        internal State(Dictionary<T, Transition<S, T, C>>? transitions = null, OnStateEvent? onEnter = null, OnStateEvent? onExit = null) {
+        public readonly Dictionary<T, List<Transition<S, T, C>>> transitions = [];
+        internal State(Dictionary<T, List<Transition<S, T, C>>>? transitions = null, OnStateEvent? onEnter = null, OnStateEvent? onExit = null) {
             if (transitions != null) this.transitions = transitions;
 
             // Register default events
@@ -27,17 +27,39 @@ namespace StateNet
 
         #region API
 
-        public State<S, T, C> AddTransition(T action, S targetStateName) => AddTransition(action, new Transition<S, T, C>(targetStateName));
-        public State<S, T, C> AddTransition(T action, Transition<S, T, C> transition)
+        public Transition<S, T, C> AddTransition(T action, S targetStateName) => AddTransition(action, new Transition<S, T, C>(targetStateName));
+        public Transition<S, T, C> AddTransition(T action, Transition<S, T, C> transition)
         {
-            transitions[action] = transition;
-            return this;
+            if (!transitions.ContainsKey(action)) transitions[action] = [];
+            transitions[action].Add(transition);
+            return transition;
         }
 
-        public State<S, T, C> RemoveTransition(T action)
+        public State<S, T, C> RemoveTransitions(T action)
         {
             transitions.Remove(action);
             return this;
+        }
+
+        internal List<Transition<S, T, C>> GetSortedActionTransitionsList(T action) => [.. transitions[action].OrderByDescending(item => item.IsConditional())];
+
+        internal Transition<S, T, C>? GetTransitionByAction(StateMachine<S, T, C> machine, T action)
+        {
+            foreach (var transition in GetSortedActionTransitionsList(action))
+            {
+                if (!transition.IsConditional()) return transition;
+
+                var transitionInfo = new TransitionInfo<S, T, C>
+                {
+                    Via = action,
+                    Machine = machine,
+                    ToState = transition.targetState,
+                    FromState = machine.CurrentState,
+                };
+                if(transition.Evaluate(transitionInfo)) return transition;
+            }
+
+            return null;
         }
 
         // State API

@@ -30,7 +30,7 @@ namespace StateNet.Tests
                 for (short i = 0; i < states.Length; i++)
                 {
                     var transitatesTo = states[(i + 1) >= states.Length ? 0 : i];
-                    var s = builder.AddState(states[i], new() { {"transitate", new(transitatesTo)} });
+                    var s = builder.AddState(states[i], new() { {"transitate", [new(transitatesTo)]} });
 
                     TestNoEventsAreCalled(s);
                 }

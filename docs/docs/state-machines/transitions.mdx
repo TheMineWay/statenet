@@ -1,0 +1,259 @@
+---
+sidebar_position: 3
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# State transitions
+
+In order to define relations between states you need to create transitions. In a nutshell, a transition specifies a possible state change from an origin state to a target state when a specific action is triggered. As many transitions as needed can be defined.
+
+## Simple transitions
+
+Simple transitions only define the origin state, target state and the action that triggers the transition. You can add a transition using the `AddTransition` method from the defined state, indicating the action and the target state. Example:
+
+```csharp
+var state = mb.AddState("StateA");
+state.AddTransition("switch", "StateB");
+```
+
+The target state is **StateB** and the action is **switch**.
+
+Lets see a working example:
+
+<Tabs>
+  <TabItem value="diagram" label="Diagram" default>
+    <div style={{textAlign: 'center'}}>
+
+    ```mermaid
+    stateDiagram-v2
+        [*] --> StateA
+        StateA --> StateB: toB
+    ```
+
+    </div>
+
+  </TabItem>
+  <TabItem value="code" label="Machine config">
+    ```csharp
+    var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
+        // Define states
+        var stateA = mb.AddState("StateA");
+        mb.AddState("StateB");
+
+        // Define transitions
+        stateA.AddTransition("toB", "StateB");
+    }, "StateA");
+    ```
+
+  </TabItem>
+</Tabs>
+
+This example shows us a transition from **StateA** to **StateB**. It only happens when the action **toB** is triggered.
+
+Let's see another example:
+
+<Tabs>
+  <TabItem value="diagram" label="Diagram" default>
+    <div style={{textAlign: 'center'}}>
+
+        ```mermaid
+        stateDiagram-v2
+            [*] --> StateA
+            StateA --> StateB: toB
+            StateA --> StateC: toC
+        ```
+
+    </div>
+
+  </TabItem>
+  <TabItem value="code" label="Machine config">
+    ```csharp
+    var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
+        // Define states
+        var stateA = mb.AddState("StateA");
+        mb.AddState("StateB");
+        mv.AddState("StateC");
+
+        // Define transitions
+        stateA.AddTransition("toB", "StateB");
+        stateA.AddTransition("toC", "StateC");
+    }, "StateA");
+    ```
+
+  </TabItem>
+</Tabs>
+
+This example shows us two transitions from **StateA**:
+
+- To **StateB** when the action **toB** is triggered.
+- To **StateC** when the action **toC** is triggered.
+
+We can see that the target state depends on the action that is triggered.
+
+## Conditional transitions
+
+Conditional transitions work as simple transitions but they only work when a provided method returns `true`. This is useful when you want to disable transitions based on programmatic behavior. One popular case is disabling transitions depending on the
+[context](./context.md) value.
+
+You can add a condition to a simple transition by using the `When` method from the transition instance. Example:
+
+```csharp
+var stateA = mb.AddState("StateA");
+var transitionToB = stateA.AddTransition("toB", "StateB");
+
+transitionToB.When((info) => {
+    // When we return `true` the transition is enabled. Otherwise it is disabled.
+    return true;
+});
+```
+
+Let's use the day counter example. The machine should stop transitioning to night once the days count reaches 10.
+This example uses the [machine context](./context.md), read the context documentation to understand it better:
+
+<Tabs>
+  <TabItem value="diagram" label="Diagram">
+    <div style={{textAlign: 'center'}}>
+
+    ```mermaid
+    stateDiagram-v2
+        [*] --> DAY
+        DAY --> NIGHT: skip (with days < 10 condition)
+        NIGHT --> DAY: skip
+    ```
+
+    </div>
+
+  </TabItem>
+  <TabItem value="code" label="Machine config" default>
+    ```csharp
+    var machineBlueprint = StateMachine<string, string, int>.Factory((mb) => {
+        // Define states
+        var day = mb.AddState("DAY");
+        var night = mb.AddState("NIGHT");
+
+        // Define transitions
+        var dayTransition = day.AddTransition("skip", "NIGHT");
+        night.AddTransition("skip", "DAY");
+
+        // Define conditions
+        dayTransition.When((info) => {
+            return info.Machine.Context < 10; // Allows the transition only when days count (stored in the context) is less than 10
+        });
+
+        // Define events
+        day.OnEnter((info) => {
+            var machine = info.Machine;
+            machine.MutateContext((context) => context + 1); // Increment the days count
+        });
+    }, "DAY", 0); // Initial state is 'DAY' and initial context is '0'
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Multiple conditions
+
+One transition can have multiple conditions. You can add more than one by simply invoking the `When` method again. For example, let's add another condition to the past example:
+
+```csharp
+// ...
+
+// Define conditions
+
+// Same condition as the previous example
+dayTransition.When((info) => {
+    return info.Machine.Context < 10;
+});
+
+// New condition that will also be evaluated
+dayTransition.When((info) => {
+    return false;
+});
+
+// ...
+```
+
+Even thought the first condition will sometimes return `true` the second one will prevent the transition from changing the state. This is because the machine engine treats both conditions as a single AND condition (condition1 AND condition2), so if one of them is `false` the transition is disabled.
+
+### Condition dependant transitions
+
+Conditional transitions allow you to create condition dependant transitions. This happens when a transition needs a condition to obtain a proper working machine. For example, when a state has different two transitions to two different states with the same action. See the diagram:
+
+<Tabs>
+  <TabItem value="diagram" label="Diagram" default>
+    <div style={{textAlign: 'center'}}>
+
+    ```mermaid
+    stateDiagram-v2
+        [*] --> StateA
+        StateA --> StateB: change
+        StateA --> StateC: change
+    ```
+
+    </div>
+
+  </TabItem>
+  <TabItem value="code" label="Machine config">
+    ```csharp
+    var machineBlueprint = StateMachine<string, string, int>.Factory((mb) => {
+        // Define states
+        var stateA = mb.AddState("StateA");
+        var stateB = mb.AddState("StateB");
+        var stateC = mb.AddState("StateC");
+
+        // Define transitions
+        stateA.AddTransition("change", "StateB");
+        stateA.AddTransition("change", "StateC");
+    }, "StateA");
+    ```
+
+  </TabItem>
+</Tabs>
+
+We can see that **StateA** has two transitions (to **StateB** and **StateC**) with the action **change**. This is a valid state machine, but it might lead to unexpected behaviors as the machine has no priority on which state it has to choose.
+Here is where **conditional transitions** come in.
+
+To solve this you only need to specify a condition to the state that has to be conditionally evaluated before triggering the transition. This way the state machine will prioritize transitioning to the conditional transition. If the condition fails it tries to transition with the other transitions. Let's update the example.
+
+<Tabs>
+  <TabItem value="diagram" label="Diagram" default>
+    <div style={{textAlign: 'center'}}>
+
+    ```mermaid
+    stateDiagram-v2
+        [*] --> StateA
+        StateA --> StateB: change [#2]
+        StateA --> StateC: change (with condition) [#1]
+    ```
+
+    </div>
+
+  </TabItem>
+  <TabItem value="code" label="Machine config">
+    ```csharp
+    var machineBlueprint = StateMachine<string, string, int>.Factory((mb) => {
+        // Define states
+        var stateA = mb.AddState("StateA");
+        var stateB = mb.AddState("StateB");
+        var stateC = mb.AddState("StateC");
+
+        // Define transitions
+        stateA.AddTransition("change", "StateB");
+        stateA.AddTransition("change", "StateC").When((info) => {
+            // Here you can define your own custom condition
+            return true;
+        });
+    }, "StateA");
+    ```
+
+  </TabItem>
+</Tabs>
+
+With the previous modification you prioritized **StateC** over **StateB** when transitioning from **StateA** with the action **change**. If **StateC** transition condition fails it will transition to **StateB**.
+
+:::warning Keep in mind
+If more than one transition has a condition you cannot known which transition will be picked first. You only known conditional transitions are evaluated before non conditional transitions.
+
+:::

@@ -7,7 +7,7 @@ namespace StateNet {
 
         public readonly S targetState;
 
-        public Transition(S targetState, OnTransitionEvent? onTransition = null) {
+        public Transition( S targetState, OnTransitionEvent? onTransition = null) {
             this.targetState = targetState;
 
             // Register default events
@@ -27,6 +27,28 @@ namespace StateNet {
         {
             InvokeOnTransition(transitionInfo);
         }
+
+
+        // Conditionals
+
+        private readonly List<Func<TransitionInfo<S, A, C>, bool>> conditions = [];
+        public Transition<S, A, C> When(Func<TransitionInfo<S, A, C>, bool> conditionFn)
+        {
+            conditions.Add(conditionFn);
+            return this;
+        }
+
+        internal bool Evaluate(TransitionInfo<S, A, C> transitionInfo)
+        {
+            foreach (var condition in conditions)
+            {
+                var result = condition(transitionInfo);
+                if (!condition(transitionInfo)) return false;
+            }
+            return true;
+        }
+
+        public bool IsConditional() => conditions.Count > 0;
 
         #endregion
     }

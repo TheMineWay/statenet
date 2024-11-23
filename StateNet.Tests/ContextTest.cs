@@ -5,7 +5,7 @@
         [Fact]
         public void ContextMutates()
         {
-            // This tests that the machine is able to count how many days have passed by mutatint its context each day
+            // This tests that the machine is able to count how many days have passed by mutating its context each day
 
             const string ACTION = "pass_time";
             var initialContext = 0;
