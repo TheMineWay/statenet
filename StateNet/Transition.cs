@@ -28,7 +28,26 @@ namespace StateNet {
             InvokeOnTransition(transitionInfo);
         }
 
-        public bool IsConditional() => false;
+
+        // Conditionals
+
+        private readonly List<Func<TransitionInfo<S, A, C>, bool>> conditions = [];
+        public Transition<S, A, C> When(Func<TransitionInfo<S, A, C>, bool> conditionFn)
+        {
+            conditions.Add(conditionFn);
+            return this;
+        }
+
+        internal bool Evaluate(TransitionInfo<S, A, C> transitionInfo)
+        {
+            foreach (var condition in conditions)
+            {
+                if (!condition(transitionInfo)) return false;
+            }
+            return true;
+        }
+
+        public bool IsConditional() => conditions.Count > 0;
 
         #endregion
     }

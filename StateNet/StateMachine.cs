@@ -32,7 +32,7 @@ namespace StateNet
             if (!oldState.transitions.ContainsKey(action)) return;
 
             // Get the first valid transition
-            var transition = oldState.GetTransitionByAction(action);
+            var transition = oldState.GetTransitionByAction(this, action);
             if (transition == null) return; // If none is valid, abort
 
             CurrentState = transition.targetState; // Change current state

@@ -43,10 +43,18 @@ namespace StateNet
 
         internal List<Transition<S, T, C>> GetSortedActionTransitionsList(T action) => [.. transitions[action].OrderByDescending(item => item.IsConditional())];
 
-        internal Transition<S, T, C>? GetTransitionByAction(T action)
+        internal Transition<S, T, C>? GetTransitionByAction(StateMachine<S, T, C> machine, T action)
         {
             foreach (var transition in GetSortedActionTransitionsList(action))
             {
+                var transitionInfo = new TransitionInfo<S, T, C> {
+                    Via = action,
+                    Machine = machine,
+                    ToState = transition.targetState,
+                    FromState = machine.CurrentState,
+                };
+
+                var evaluated = transition.Evaluate(transitionInfo);
                 if (!transition.IsConditional()) return transition;
             }
 
