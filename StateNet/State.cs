@@ -27,12 +27,12 @@ namespace StateNet
 
         #region API
 
-        public State<S, T, C> AddTransition(T action, S targetStateName) => AddTransition(action, new Transition<S, T, C>(targetStateName));
-        public State<S, T, C> AddTransition(T action, Transition<S, T, C> transition)
+        public Transition<S, T, C> AddTransition(T action, S targetStateName) => AddTransition(action, new Transition<S, T, C>(targetStateName));
+        public Transition<S, T, C> AddTransition(T action, Transition<S, T, C> transition)
         {
             if (!transitions.ContainsKey(action)) transitions[action] = [];
             transitions[action].Add(transition);
-            return this;
+            return transition;
         }
 
         public State<S, T, C> RemoveTransitions(T action)
@@ -47,15 +47,16 @@ namespace StateNet
         {
             foreach (var transition in GetSortedActionTransitionsList(action))
             {
-                var transitionInfo = new TransitionInfo<S, T, C> {
+                if (!transition.IsConditional()) return transition;
+
+                var transitionInfo = new TransitionInfo<S, T, C>
+                {
                     Via = action,
                     Machine = machine,
                     ToState = transition.targetState,
                     FromState = machine.CurrentState,
                 };
-
-                var evaluated = transition.Evaluate(transitionInfo);
-                if (!transition.IsConditional()) return transition;
+                if(transition.Evaluate(transitionInfo)) return transition;
             }
 
             return null;

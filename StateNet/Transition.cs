@@ -42,6 +42,7 @@ namespace StateNet {
         {
             foreach (var condition in conditions)
             {
+                var result = condition(transitionInfo);
                 if (!condition(transitionInfo)) return false;
             }
             return true;
