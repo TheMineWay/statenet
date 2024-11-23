@@ -2,8 +2,8 @@
 sidebar_position: 3
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
 # State transitions
 
@@ -33,6 +33,7 @@ Lets see a working example:
     ```
 
     </div>
+
   </TabItem>
   <TabItem value="code" label="Machine config">
     ```csharp
@@ -45,6 +46,7 @@ Lets see a working example:
         stateA.AddTransition("toB", "StateB");
     }, "StateA");
     ```
+
   </TabItem>
 </Tabs>
 
@@ -64,6 +66,7 @@ Let's see another example:
         ```
 
     </div>
+
   </TabItem>
   <TabItem value="code" label="Machine config">
     ```csharp
@@ -78,6 +81,7 @@ Let's see another example:
         stateA.AddTransition("toC", "StateC");
     }, "StateA");
     ```
+
   </TabItem>
 </Tabs>
 
@@ -90,7 +94,7 @@ We can see that the target state depends on the action that is triggered.
 
 ## Conditional transitions
 
-Conditional transitions work as simple transitions but they only work when a provided method returns `true`. This is useful when you want to disable transitions based on programmatic behavior. One popular case is disabling transitions depending on the 
+Conditional transitions work as simple transitions but they only work when a provided method returns `true`. This is useful when you want to disable transitions based on programmatic behavior. One popular case is disabling transitions depending on the
 [context](./context.md) value.
 
 You can add a condition to a simple transition by using the `When` method from the transition instance. Example:
@@ -120,6 +124,7 @@ This example uses the [machine context](./context.md), read the context document
     ```
 
     </div>
+
   </TabItem>
   <TabItem value="code" label="Machine config" default>
     ```csharp
@@ -134,7 +139,7 @@ This example uses the [machine context](./context.md), read the context document
 
         // Define conditions
         dayTransition.When((info) => {
-            return info.context < 10; // Allows the transition only when days count (stored in the context) is less than 10
+            return info.Machine.Context < 10; // Allows the transition only when days count (stored in the context) is less than 10
         });
 
         // Define events
@@ -144,6 +149,7 @@ This example uses the [machine context](./context.md), read the context document
         });
     }, "DAY", 0); // Initial state is 'DAY' and initial context is '0'
     ```
+
   </TabItem>
 </Tabs>
 
@@ -158,7 +164,7 @@ One transition can have multiple conditions. You can add more than one by simply
 
 // Same condition as the previous example
 dayTransition.When((info) => {
-    return info.context < 10;
+    return info.Machine.Context < 10;
 });
 
 // New condition that will also be evaluated
@@ -187,6 +193,7 @@ Conditional transitions allow you to create condition dependant transitions. Thi
     ```
 
     </div>
+
   </TabItem>
   <TabItem value="code" label="Machine config">
     ```csharp
@@ -201,6 +208,7 @@ Conditional transitions allow you to create condition dependant transitions. Thi
         stateA.AddTransition("change", "StateC");
     }, "StateA");
     ```
+
   </TabItem>
 </Tabs>
 
@@ -221,6 +229,7 @@ To solve this you only need to specify a condition to the state that has to be c
     ```
 
     </div>
+
   </TabItem>
   <TabItem value="code" label="Machine config">
     ```csharp
@@ -238,6 +247,7 @@ To solve this you only need to specify a condition to the state that has to be c
         });
     }, "StateA");
     ```
+
   </TabItem>
 </Tabs>
 
