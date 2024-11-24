@@ -1,13 +1,13 @@
 ﻿namespace StateNet
 {
-    public class MutableStateMachine<S, T, C> : StateMachine<S, T, C> where S : IComparable where T : IComparable
+    public class MutableStateMachine<S, A, C> : StateMachine<S, A, C> where S : notnull, IComparable where A : notnull, IComparable
     {
         #region Factory
         internal MutableStateMachine(S initialState, C? initialContext) : base(initialState, initialContext) {}
 
-        public static new Func<MutableStateMachine<S, T, C>> Factory(Action<MutableStateMachine<S, T, C>> builder, S initialState, C? initialContext = default) => () =>
+        public static new Func<MutableStateMachine<S, A, C>> Factory(Action<MutableStateMachine<S, A, C>> builder, S initialState, C? initialContext = default) => () =>
         {
-            var machine = new MutableStateMachine<S, T, C>(initialState, initialContext);
+            var machine = new MutableStateMachine<S, A, C>(initialState, initialContext);
             builder(machine);
             return machine;
         };
@@ -15,9 +15,9 @@
         #endregion
 
         #region API.Build
-        public State<S, T, C> AddState(S stateName, Dictionary<T, List<Transition<S, T, C>>>? transitions = null)
+        public State<S, A, C> AddState(S stateName, Dictionary<A, List<Transition<S, A, C>>>? transitions = null)
         {
-            var state = new State<S, T, C>(transitions);
+            var state = new State<S, A, C>(transitions);
             states[stateName] = state;
             return state;
         }

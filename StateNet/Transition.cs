@@ -1,7 +1,7 @@
 ﻿using StateNet.Info;
 
 namespace StateNet {
-    public class Transition<S, A, C> where S : IComparable where A : IComparable
+    public class Transition<S, A, C> where S : notnull, IComparable where A : notnull, IComparable
     {
         public delegate void OnTransitionEvent(TransitionInfo<S, A, C> transitionInfo);
 
