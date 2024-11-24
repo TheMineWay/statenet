@@ -7,7 +7,11 @@ namespace StateNet
         public delegate void OnStateEvent(TransitionInfo<S,A,C> transitionInfo);
 
         public readonly Dictionary<A, List<Transition<S, A, C>>> transitions = [];
-        internal State(Dictionary<A, List<Transition<S, A, C>>>? transitions = null, OnStateEvent? onEnter = null, OnStateEvent? onExit = null) {
+        public readonly S name; // <- State code (id)
+        internal State(S name, Dictionary<A, List<Transition<S, A, C>>>? transitions = null, OnStateEvent? onEnter = null, OnStateEvent? onExit = null) {
+            // Store state code
+            this.name = name;
+
             if (transitions != null) this.transitions = transitions;
 
             // Register default events
@@ -27,6 +31,7 @@ namespace StateNet
 
         #region API
 
+        public Transition<S, A, C> AddTransition(A action, State<S,A,C> targetState) => AddTransition(action, new Transition<S, A, C>(targetState.name));
         public Transition<S, A, C> AddTransition(A action, S targetStateName) => AddTransition(action, new Transition<S, A, C>(targetStateName));
         public Transition<S, A, C> AddTransition(A action, Transition<S, A, C> transition)
         {
@@ -41,6 +46,23 @@ namespace StateNet
             return this;
         }
 
+        // State API
+
+        public State<S, A, C> OnEnter(OnStateEvent onEnter)
+        {
+            this.onEnter += onEnter;
+            return this;
+        }
+
+        public State<S, A, C> OnExit(OnStateEvent onExit)
+        {
+            this.onExit += onExit;
+            return this;
+        }
+
+        #endregion
+
+        #region Internal API
         internal List<Transition<S, A, C>> GetSortedActionTransitionsList(A action) => [.. transitions[action].OrderByDescending(item => item.IsConditional())];
 
         internal Transition<S, A, C>? GetTransitionByAction(StateMachine<S, A, C> machine, A action)
@@ -56,24 +78,10 @@ namespace StateNet
                     ToState = transition.targetState,
                     FromState = machine.CurrentState,
                 };
-                if(transition.Evaluate(transitionInfo)) return transition;
+                if (transition.Evaluate(transitionInfo)) return transition;
             }
 
             return null;
-        }
-
-        // State API
-
-        public State<S, A, C> OnEnter(OnStateEvent onEnter)
-        {
-            this.onEnter += onEnter;
-            return this;
-        }
-
-        public State<S, A, C> OnExit(OnStateEvent onExit)
-        {
-            this.onExit += onExit;
-            return this;
         }
 
         #endregion

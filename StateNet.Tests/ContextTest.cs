@@ -16,7 +16,7 @@
                 dayState.AddTransition(ACTION, "night");
 
                 var nightState = builder.AddState("night");
-                nightState.AddTransition(ACTION, "day");
+                nightState.AddTransition(ACTION, dayState); // Test transitioning with state reference
 
                 dayState.OnEnter((info) => {
                     var machine = info.Machine;

@@ -2,6 +2,9 @@
 sidebar_position: 1
 ---
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 # Setting up a State Machine
 
 This guide will walk you through the setup process for creating and managing state machines using the `StateNet` library. We’ll cover:
@@ -52,18 +55,38 @@ Transitions determine the paths between states. They consist of a origin state, 
 
 Example:
 
-```csharp
-string initialState = "IDLE";
+<Tabs>
+  <TabItem value="by-code" label="With state code" default>
+    ```csharp
+    string initialState = "IDLE";
 
-var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
-    var idleState = mb.AddState("IDLE");
-    var runningState = mb.AddState("RUNNING");
+    var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
+        var idleState = mb.AddState("IDLE");
+        var runningState = mb.AddState("RUNNING");
 
-    // The first parameter represents the action that triggers a change to the state from a defined state
-    idleState.AddTransition("start", "RUNNING"); // When "start" is triggered while the machine is on "IDLE" state it will transition to "RUNNING"
-    runningState.AddTransition("stop", "IDLE");
-}, initialState);
-```
+        // The first parameter represents the action that triggers a change to the state from a defined state
+        idleState.AddTransition("start", "RUNNING"); // When "start" is triggered while the machine is on "IDLE" state it will transition to "RUNNING"
+        runningState.AddTransition("stop", "IDLE");
+    }, initialState);
+    ```
+
+  </TabItem>
+  <TabItem value="by-reference" label="With state reference">
+    ```csharp
+    string initialState = "IDLE";
+
+    var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
+        var idleState = mb.AddState("IDLE");
+        var runningState = mb.AddState("RUNNING");
+
+        // The first parameter represents the action that triggers a change to the state from a defined state
+        idleState.AddTransition("start", runningState); // When "start" is triggered while the machine is on "IDLE" state it will transition to "RUNNING"
+        runningState.AddTransition("stop", idleState);
+    }, initialState);
+    ```
+
+  </TabItem>
+</Tabs>
 
 ## 3. Setting Up Events
 
