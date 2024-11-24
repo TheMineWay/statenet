@@ -2,7 +2,7 @@
 
 namespace StateNet
 {
-    public class State<S, A, C> where S : IComparable where A : IComparable
+    public class State<S, A, C> where S : notnull, IComparable where A : notnull, IComparable
     {
         public delegate void OnStateEvent(TransitionInfo<S,A,C> transitionInfo);
 

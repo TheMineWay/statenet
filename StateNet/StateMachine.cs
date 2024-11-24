@@ -2,7 +2,7 @@
 
 namespace StateNet
 {
-    public class StateMachine<S, A, C> where S : IComparable where A : IComparable
+    public class StateMachine<S, A, C> where S : notnull, IComparable where A : notnull, IComparable
     {
         #region Factory
         internal StateMachine(S initialState, C? initialContext) {
