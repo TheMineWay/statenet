@@ -34,6 +34,10 @@ namespace StateNet
             var transition = oldState.GetTransitionByAction(this, action);
             if (transition == null) return; // If none is valid, abort
 
+            // Disable transitions to itself
+            // TODO: this might be configurable in the future
+            if (CurrentState.Equals(transition.targetState)) return;
+
             CurrentState = transition.targetState; // Change current state
 
             // Get transition info
