@@ -24,6 +24,14 @@
 
         public void RemoveState(S stateName) => states.Remove(stateName);
 
+        // From any state
+
+        public State<byte, A, C> AnyState()
+        {
+            var state = new State<byte, A, C>(0);
+            return state;
+        }
+
         #endregion
     }
 }
