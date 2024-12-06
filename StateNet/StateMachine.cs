@@ -24,8 +24,12 @@ namespace StateNet
 
         public void Trigger(A action)
         {
-            // Check if machine reached a end state
-            if (!states.ContainsKey(CurrentState)) return;
+            // Check if there is an any state transition
+            var anyStateTransition = TriggerAnyStateTransitions(action);
+
+            // Check if machine reached a end state (if there is no from any state transition)
+            if (anyStateTransition == null && !states.ContainsKey(CurrentState)) return;
+
             var oldState = states[CurrentState];
             var oldStateName = CurrentState;
 
@@ -64,6 +68,9 @@ namespace StateNet
             return Context;
         }
 
+        // From any state
+        public AnonymousState<S, A, C> AnyState() => anyState;
+
         // Info API
 
         public S[] GetStates() => [.. states.Keys];
@@ -78,6 +85,15 @@ namespace StateNet
         public C? Context { get; protected set; }
 
         protected readonly AnonymousState<S, A, C> anyState = new();
+
+        #endregion
+
+        #region Utils
+
+        private AnonymousState<S, A, C>? TriggerAnyStateTransitions(A action)
+        {
+            return null;
+        }
 
         #endregion
     }

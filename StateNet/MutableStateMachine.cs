@@ -26,9 +26,6 @@ namespace StateNet
 
         public void RemoveState(S stateName) => states.Remove(stateName);
 
-        // From any state
-        public AnonymousState<S, A, C> AnyState() => anyState;
-
         #endregion
     }
 }

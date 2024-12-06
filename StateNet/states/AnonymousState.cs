@@ -58,14 +58,36 @@ namespace StateNet.States
             return this;
         }
 
+        public List<Transition<S, A, C>>? GetTransitions(A action) {
+            transitions.TryGetValue(action, out List<Transition<S, A, C>>? value);
+            return value;
+        }
+
         #endregion
 
         #region Internal API
-        internal List<Transition<S, A, C>> GetSortedActionTransitionsList(A action) => [.. transitions[action].OrderByDescending(item => item.IsConditional())];
+
+        /*
+         * ORDER
+         * #1: transitions from any state.
+         * #2: transitions between defined states.
+         * 
+         * Each transitions group is sorted. First conditional transitions, then conditionless ones.
+         */
+        internal List<Transition<S, A, C>> GetSortedActionTransitionsList(StateMachine<S, A, C> machine, A action) {
+            List<Transition<S, A, C>> tr = [.. transitions[action].OrderByDescending(item => item.IsConditional())];
+
+            if (machine.AnyState().GetTransitions(action)?.Count > 0)
+            {
+                tr = [.. machine.AnyState().GetTransitions(action)?.OrderByDescending(item => item.IsConditional()), ..tr];
+            }
+
+            return tr;
+        }
 
         internal Transition<S, A, C>? GetTransitionByAction(StateMachine<S, A, C> machine, A action)
         {
-            foreach (var transition in GetSortedActionTransitionsList(action))
+            foreach (var transition in GetSortedActionTransitionsList(machine, action))
             {
                 if (!transition.IsConditional()) return transition;
 
