@@ -29,7 +29,7 @@
         [Fact]
         public void TestTransitionPriorities()
         {
-            Func<StateMachine<string, string, string>> Generate(bool withCondition = false)
+            Func<StateMachine<string, string, string>> Generate(ConditionCase conditionCase)
             {
                 return StateMachine<string, string, string>.Factory((builder) =>
                 {
@@ -46,7 +46,7 @@
 
                     // We define redundant transitions to test if order is stable
                     var unpreferentTransition = s1.AddTransition("r-s4", s4);
-                    builder.AnyState().AddTransition("r-s4", preferentS4);
+                    var preferentCondition = builder.AnyState().AddTransition("r-s4", preferentS4);
 
                     // We define a reset transition from any state to s1
                     var resetTransition = builder.AnyState().AddTransition("reset", s1);
@@ -58,13 +58,44 @@
                     });
 
                     // Add condition if needed. This makes it preferent, but as we are testing AnyState transitions this won't be prefered over AnyState transitions.
-                    if (withCondition) unpreferentTransition.When((info) => true);
+                    if (conditionCase.unpreferentCondition != null) unpreferentTransition.When((info) => conditionCase.unpreferentCondition());
+                    if (conditionCase.preferentCondition != null) preferentCondition.When((info) => conditionCase.preferentCondition());
                 }, "s1");
             }
 
-            foreach (var withCondition in new List<bool>() {false, true})
+            foreach (var conditionCase in new List<ConditionCase>() {
+                new(),
+                new()
+                {
+                    unpreferentCondition = () => true,
+                },
+                new()
+                {
+                    unpreferentCondition = () => false,
+                },
+                new()
+                {
+                    preferentCondition = () => true,
+                },
+                new()
+                {
+                    preferentCondition = () => false,
+                    targets = "s4",
+                },
+                new()
+                {
+                    unpreferentCondition = () => true,
+                    preferentCondition = () => true,
+                },
+                new()
+                {
+                    unpreferentCondition = () => false,
+                    preferentCondition = () => false,
+                    targets = "s1"
+                }
+            })
             {
-                var machineBlueprint = Generate(withCondition);
+                var machineBlueprint = Generate(conditionCase);
 
                 var machine = machineBlueprint();
 
@@ -80,7 +111,7 @@
                 // Test priority
 
                 machine.Trigger("r-s4");
-                Assert.Equal("preferent-s4", machine.CurrentState);
+                Assert.Equal(conditionCase.targets, machine.CurrentState);
             }
         }
 
@@ -109,5 +140,14 @@
         }
 
         #endregion
+
+        struct ConditionCase
+        {
+            public Func<bool>? unpreferentCondition = null;
+            public Func<bool>? preferentCondition = null;
+            public string targets = "preferent-s4";
+
+            public ConditionCase() {}
+        }
     }
 }
