@@ -1,11 +1,10 @@
-﻿using StateNet.Info;
-
-namespace StateNet
+﻿namespace StateNet.States
 {
     public class State<S, A, C> : AnonymousState<S, A, C> where S : notnull, IComparable where A : notnull, IComparable
     {
         public readonly S name; // <- State code (id)
-        internal State(S name, Dictionary<A, List<Transition<S, A, C>>>? transitions = null, OnStateEvent? onEnter = null, OnStateEvent? onExit = null) : base(transitions, onEnter, onExit) {
+        internal State(S name, Dictionary<A, List<Transition<S, A, C>>>? transitions = null, OnStateEvent? onEnter = null, OnStateEvent? onExit = null) : base(transitions, onEnter, onExit)
+        {
             // Store state code
             this.name = name;
         }

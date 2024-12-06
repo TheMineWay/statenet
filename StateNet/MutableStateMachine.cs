@@ -1,4 +1,6 @@
-﻿namespace StateNet
+﻿using StateNet.States;
+
+namespace StateNet
 {
     public class MutableStateMachine<S, A, C> : StateMachine<S, A, C> where S : notnull, IComparable where A : notnull, IComparable
     {

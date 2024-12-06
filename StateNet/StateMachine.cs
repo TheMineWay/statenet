@@ -1,4 +1,5 @@
 ﻿using StateNet.Info;
+using StateNet.States;
 
 namespace StateNet
 {

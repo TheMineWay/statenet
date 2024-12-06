@@ -1,6 +1,6 @@
 ﻿using StateNet.Info;
 
-namespace StateNet
+namespace StateNet.States
 {
     public class AnonymousState<S, A, C> where S : notnull, IComparable where A : notnull, IComparable
     {
