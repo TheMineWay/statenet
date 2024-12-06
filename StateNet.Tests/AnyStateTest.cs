@@ -27,21 +27,21 @@ namespace StateNet.Tests
             var machine = machineBlueprint();
 
             Assert.Equal(machine.GetStates(), states);
-            Assert.Equal(machine.CurrentState, states[0]);
+            Assert.Equal(states[0], machine.CurrentState);
 
             // Do some loops
             for (byte i = 0; i < 2; i++)
             {
                 machine.Trigger("switch");
-                Assert.Equal(machine.CurrentState, states[1]);
+                Assert.Equal(states[1], machine.CurrentState);
 
                 machine.Trigger("switch");
-                Assert.Equal(machine.CurrentState, states[2]);
+                Assert.Equal(states[2], machine.CurrentState);
             }
 
             // Being in state2:
             machine.Trigger("reset");
-            Assert.Equal(machine.CurrentState, states[0]);
+            Assert.Equal(states[0], machine.CurrentState);
         }
     }
 }
