@@ -77,6 +77,8 @@ namespace StateNet
 
         public C? Context { get; protected set; }
 
+        protected readonly AnonymousState<S, A, C> anyState = new();
+
         #endregion
     }
 }
