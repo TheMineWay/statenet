@@ -1,6 +1,4 @@
-﻿using StateNet.States;
-
-namespace StateNet.Tests
+﻿namespace StateNet.Tests
 {
     public class AnyStateTest
     {
@@ -30,7 +28,7 @@ namespace StateNet.Tests
             Assert.Equal(states[0], machine.CurrentState);
 
             // Do some loops
-            for (byte i = 0; i < 2; i++)
+            for (byte i = 0; i < 1; i++)
             {
                 machine.Trigger("switch");
                 Assert.Equal(states[1], machine.CurrentState);

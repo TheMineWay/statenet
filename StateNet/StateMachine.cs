@@ -24,17 +24,11 @@ namespace StateNet
 
         public void Trigger(A action)
         {
-            // Check if there is an any state transition
-            var anyStateTransition = TriggerAnyStateTransitions(action);
+            states.TryGetValue(CurrentState, out var oldState);
 
-            // Check if machine reached a end state (if there is no from any state transition)
-            if (anyStateTransition == null && !states.ContainsKey(CurrentState)) return;
-
-            var oldState = states[CurrentState];
+            // If current state is not defined, temporarily create a simulated state instance
+            oldState ??= new(CurrentState);
             var oldStateName = CurrentState;
-
-            // Check if the triggered action can trigger a transition
-            if (!oldState.transitions.ContainsKey(action)) return;
 
             // Get the first valid transition
             var transition = oldState.GetTransitionByAction(this, action);
@@ -85,15 +79,6 @@ namespace StateNet
         public C? Context { get; protected set; }
 
         protected readonly AnonymousState<S, A, C> anyState = new();
-
-        #endregion
-
-        #region Utils
-
-        private AnonymousState<S, A, C>? TriggerAnyStateTransitions(A action)
-        {
-            return null;
-        }
 
         #endregion
     }

@@ -75,7 +75,13 @@ namespace StateNet.States
          * Each transitions group is sorted. First conditional transitions, then conditionless ones.
          */
         internal List<Transition<S, A, C>> GetSortedActionTransitionsList(StateMachine<S, A, C> machine, A action) {
-            List<Transition<S, A, C>> tr = [.. transitions[action].OrderByDescending(item => item.IsConditional())];
+            List<Transition<S, A, C>> tr = [];
+
+            transitions.TryGetValue(action, out var stateTransitions);
+            if (stateTransitions != null)
+            {
+                tr.AddRange(stateTransitions.OrderByDescending(item => item.IsConditional()));
+            }
 
             if (machine.AnyState().GetTransitions(action)?.Count > 0)
             {
