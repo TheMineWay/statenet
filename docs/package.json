@@ -29,9 +29,9 @@
   },
   "dependencies": {
     "@axe-core/playwright": "^4.10.1",
-    "@docusaurus/core": "3.5.2",
-    "@docusaurus/preset-classic": "3.5.2",
-    "@docusaurus/theme-mermaid": "^3.5.2",
+    "@docusaurus/core": "^3.6.3",
+    "@docusaurus/preset-classic": "^3.6.3",
+    "@docusaurus/theme-mermaid": "^3.6.3",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
     "dotenv": "^16.4.5",
@@ -40,9 +40,9 @@
     "react-dom": "^18.0.0"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.6.3",
-    "@docusaurus/tsconfig": "3.6.3",
-    "@docusaurus/types": "3.6.3",
+    "@docusaurus/module-type-aliases": "^3.6.3",
+    "@docusaurus/tsconfig": "^3.6.3",
+    "@docusaurus/types": "^3.6.3",
     "@playwright/test": "^1.49.0",
     "typescript": "~5.7.2",
     "xml2js": "^0.6.2"
