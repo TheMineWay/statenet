@@ -1,5 +1,6 @@
 ﻿using StateNet.Info;
 using StateNet.States;
+using StateNet.Trace;
 
 namespace StateNet
 {
@@ -9,6 +10,8 @@ namespace StateNet
         internal StateMachine(S initialState, C? initialContext) {
             CurrentState = initialState;
             Context = initialContext;
+
+            UpdateTrace();
         }
 
         public static Func<StateMachine<S, A, C>> Factory(Action<MutableStateMachine<S, A, C>> builder, S initialState, C? initialContext = default) => () =>
@@ -49,6 +52,9 @@ namespace StateNet
             // Invoke state events
             oldState.InvokeOnExit(transitionInfo);
             states[CurrentState].InvokeOnEnter(transitionInfo);
+
+            // Update trace
+            UpdateTrace();
         }
 
         public void SetContext(C context) {
@@ -77,12 +83,23 @@ namespace StateNet
 
         #region Info
 
-        public S CurrentState { get; protected set; }
+        public S CurrentState;
         readonly protected Dictionary<S, State<S, A, C>> states = [];
 
-        public C? Context { get; protected set; }
+        public C? Context;
 
         protected readonly AnonymousState<S, A, C> anyState = new();
+        private readonly MachineTrace<S, C> trace = new();
+        public MachineTrace<S, C> GetTrace() => trace;
+
+        #endregion
+
+        #region Utils
+
+        private void UpdateTrace()
+        {
+            GetTrace().AddTrace(new(CurrentState, Context));
+        }
 
         #endregion
     }
