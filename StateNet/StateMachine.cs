@@ -1,4 +1,5 @@
 ﻿using StateNet.Info;
+using StateNet.States;
 
 namespace StateNet
 {
@@ -23,17 +24,19 @@ namespace StateNet
 
         public void Trigger(A action)
         {
-            // Check if machine reached a end state
-            if (!states.ContainsKey(CurrentState)) return;
-            var oldState = states[CurrentState];
-            var oldStateName = CurrentState;
+            states.TryGetValue(CurrentState, out var oldState);
 
-            // Check if the triggered action can trigger a transition
-            if (!oldState.transitions.ContainsKey(action)) return;
+            // If current state is not defined, temporarily create a simulated state instance
+            oldState ??= new(CurrentState);
+            var oldStateName = CurrentState;
 
             // Get the first valid transition
             var transition = oldState.GetTransitionByAction(this, action);
             if (transition == null) return; // If none is valid, abort
+
+            // Disable transitions to itself
+            // TODO: this might be configurable in the future
+            if (CurrentState.Equals(transition.targetState)) return;
 
             CurrentState = transition.targetState; // Change current state
 
@@ -63,6 +66,9 @@ namespace StateNet
             return Context;
         }
 
+        // From any state
+        public AnonymousState<S, A, C> AnyState() => anyState;
+
         // Info API
 
         public S[] GetStates() => [.. states.Keys];
@@ -75,6 +81,8 @@ namespace StateNet
         readonly protected Dictionary<S, State<S, A, C>> states = [];
 
         public C? Context { get; protected set; }
+
+        protected readonly AnonymousState<S, A, C> anyState = new();
 
         #endregion
     }

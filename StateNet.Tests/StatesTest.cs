@@ -1,3 +1,5 @@
+using StateNet.States;
+
 namespace StateNet.Tests
 {
     public class StatesTest

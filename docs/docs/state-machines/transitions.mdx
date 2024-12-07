@@ -257,3 +257,60 @@ With the previous modification you prioritized **StateC** over **StateB** when t
 If more than one transition has a condition you cannot known which transition will be picked first. You only known conditional transitions are evaluated before non conditional transitions.
 
 :::
+
+## Transitions from any state
+
+Sometimes you might want to define an action that triggers a transition to a specific state from any state. This can be done by using the special **any state**. Take the following example:
+
+<Tabs>
+  <TabItem value="diagram" label="Diagram" default>
+    <div style={{textAlign: 'center'}}>
+
+    ```mermaid
+    stateDiagram-v2
+
+        classDef anyStateClass color:red,font-weight:bold
+
+        [*] --> IDLE
+        IDLE --> WALKING: increment_speed
+        WALKING --> RUNNING: increment_speed
+        WALKING --> IDLE: reduce_speed
+        RUNNING --> WALKING: reduce_speed
+        AnyState --> IDLE: force_idle
+        AnyState: Any state
+        AnyState:::anyStateClass
+    ```
+
+    </div>
+
+  </TabItem>
+  <TabItem value="code" label="Machine config">
+    ```csharp
+    var machineBlueprint = StateMachine<string, string, string>.Factory((mb) => {
+        // Define states
+        var idleState = mb.AddState("IDLE");
+        var walkingState = mb.AddState("WALKING");
+        var runningState = mb.AddState("RUNNING");
+
+        // Define transitions
+        idleState.AddTransition("increment_speed", walkingState);
+        walkingState.AddTransition("increment_speed", runningState);
+        walkingState.AddTransition("reduce_speed", idleState);
+        runningState.AddTransition("reduce_speed", walkingState);
+
+        // Here we use the special AnyState() to define the transition.
+        // It behaves like a normal state, so it can have more than one transition and handle events.
+        mb.AnyState().AddTransition("force_idle", idleState);
+    }, "IDLE");
+    ```
+
+  </TabItem>
+</Tabs>
+
+When using the **AnyState()** you are given an anonymous state (it behaves like a state, but it has no state code). You can define more than one transition and add conditions.
+
+:::info Important
+
+Transitions which origin is **AnyState** have maximum priority. If other transitions sharing the same action code are defined, they will be evaluated after the transitions from **AnyState**. It does not matter if **AnyState** transitions have no conditions attached.
+
+:::
