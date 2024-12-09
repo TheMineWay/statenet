@@ -26,10 +26,10 @@ var trafficLightBlueprint = StateMachine<LightStates, LightActions>.Factory((eb)
     // Emergency action transitions all states to RED
     greenState.AddTransition(LightActions.EMERGENCY, LightStates.RED);
     yellowState.AddTransition(LightActions.EMERGENCY, LightStates.RED);
-});
+}, LightStates.RED);
 
 // Create an instance of the traffic light state machine starting at RED
-var trafficLightMachine = trafficLightBlueprint(LightStates.RED);
+var trafficLightMachine = trafficLightBlueprint();
 
 // Simulate the timer expiring multiple times
 Console.WriteLine("Traffic Light Simulation:");
