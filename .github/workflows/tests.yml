@@ -19,7 +19,7 @@ jobs:
       - name: 💻 Check out repository code
         uses: actions/checkout@v2
 
-      - name: 🛠️ Set up .NET
+      - name: 🛠️ Set up .NET ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
