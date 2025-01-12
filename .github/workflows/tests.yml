@@ -24,7 +24,7 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet }}
 
-      - name: 📝 Generate global.json
+      - name: 📝 Generate global.json (${{ steps.stepid.outputs.dotnet-version }})
         run: echo '{"sdk":{"version":"${{ steps.stepid.outputs.dotnet-version }}"}}' > global.json
 
       - name: 📦 Restore dependencies
