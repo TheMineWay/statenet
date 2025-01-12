@@ -13,16 +13,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet-version: ["8.x", "7.x", "6.x"]
+        dotnet: ["8.x", "7.x", "6.x"]
 
     steps:
       - name: 💻 Check out repository code
         uses: actions/checkout@v2
 
-      - name: 🛠️ Set up .NET ${{ matrix.dotnet-version }}
+      - name: 🛠️ Set up .NET ${{ matrix.dotnet }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ matrix.dotnet-version }}
+          dotnet-version: ${{ matrix.dotnet }}
+
+      - name: 📝 Generate global.json
+        run: echo '{"sdk":{"version":"${{ steps.stepid.outputs.dotnet-version }}"}}' > global.json
 
       - name: 📦 Restore dependencies
         run: dotnet restore ./StateNet/StateNet.sln
@@ -31,10 +34,10 @@ jobs:
         run: dotnet build ./StateNet/StateNet.sln --configuration Release --no-restore
 
       - name: ⏩ Run unit tests with report
-        run: dotnet test ./StateNet.Tests/StateNet.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=TestResults-${{ matrix.dotnet-version }}.trx"
+        run: dotnet test ./StateNet.Tests/StateNet.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=TestResults-${{ matrix.dotnet }}.trx"
 
       - name: ⏫ Upload test results
         uses: actions/upload-artifact@v4
         with:
-          name: TestResults-${{ matrix.dotnet-version }}
-          path: ./StateNet.Tests/TestResults/TestResults-${{ matrix.dotnet-version }}.trx
+          name: TestResults-${{ matrix.dotnet }}
+          path: ./StateNet.Tests/TestResults/TestResults-${{ matrix.dotnet }}.trx
