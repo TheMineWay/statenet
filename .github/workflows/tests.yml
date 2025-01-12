@@ -21,6 +21,7 @@ jobs:
 
       - name: 🛠️ Set up .NET ${{ matrix.dotnet }}
         uses: actions/setup-dotnet@v4
+        id: stepid
         with:
           dotnet-version: ${{ matrix.dotnet }}
 
