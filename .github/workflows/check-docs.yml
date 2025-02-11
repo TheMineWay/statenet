@@ -13,11 +13,11 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Set up Node.js environment
       - name: 💚 Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
 
@@ -33,10 +33,10 @@ jobs:
           cd docs
           npm run build
 
-      # If the build fails, the workflow will stop here
+      # If the build fails, upload artifacts (logs) for debugging
       - name: ⏫ Upload artifacts on failure (Optional)
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-logs
           path: docs/.docusaurus
