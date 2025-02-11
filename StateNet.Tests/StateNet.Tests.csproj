@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
-    <TargetFrameworkMoniker>net6.0;net7.0;net8.0</TargetFrameworkMoniker>
-    <NuGetTargetMoniker>net6.0;net7.0;net8.0</NuGetTargetMoniker>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
